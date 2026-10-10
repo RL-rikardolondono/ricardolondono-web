@@ -94,23 +94,23 @@ textarea{min-height:240px;resize:vertical;line-height:1.6}
   <section id="vista-ingreso" class="ingreso">
     <div class="caja">
       <h1>Entrar al panel</h1>
-      <p>Pegue aquí su <b>llave de acceso</b> de GitHub. Esta llave solo sirve para esta web y queda guardada únicamente en este equipo.</p>
-      <label for="llave">Llave de acceso</label>
+      <p>Pegue aquí la <b>contraseña del panel</b>. Esta contraseña solo sirve para esta web y queda guardada únicamente en este equipo.</p>
+      <label for="llave">Contraseña del panel</label>
       <input type="password" id="llave" autocomplete="off" placeholder="github_pat_…">
       <label class="chk"><input type="checkbox" id="recordar" checked> Recordar en este equipo (no lo marque en computadores ajenos)</label>
       <div id="aviso-ingreso"></div>
       <div class="pie-acciones"><button class="boton b-principal b-grande" id="btn-entrar" type="button">Entrar</button></div>
     </div>
     <details class="caja">
-      <summary><b>¿No tiene la llave? Cómo crearla (una sola vez)</b></summary>
+      <summary><b>¿No tiene la contraseña? Cómo crearla (una sola vez)</b></summary>
       <ol class="pasos">
-        <li>Inicie sesión en GitHub y abra <a id="enlace-token" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">esta página para crear la llave</a>.</li>
+        <li>Inicie sesión en GitHub y abra <a id="enlace-token" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">esta página para crear la contraseña</a>.</li>
         <li>En <b>Token name</b> escriba: <i id="nombre-llave">Panel ricardolondono.com</i>. En <b>Expiration</b> elija <b>No expiration</b> (o la fecha que prefiera).</li>
         <li>En <b>Repository access</b> elija <b>Only select repositories</b> y marque solo el repositorio <b id="nombre-repo">ricardolondono-web</b>.</li>
         <li>En <b>Permissions → Repository permissions</b>, busque <b>Contents</b> y cámbielo a <b>Read and write</b>. No active nada más.</li>
-        <li>Pulse <b>Generate token</b>, copie la llave (empieza por <code>github_pat_</code>) y péguela arriba.</li>
+        <li>Pulse <b>Generate token</b>, copie la contraseña (empieza por <code>github_pat_</code>) y péguela arriba.</li>
       </ol>
-      <p class="ayuda">Guarde la llave en un lugar seguro. Si la pierde o cree que alguien la vio, bórrela en GitHub y cree otra igual.</p>
+      <p class="ayuda">Guarde la contraseña en un lugar seguro. Si la pierde o cree que alguien la vio, bórrela en GitHub y cree otra igual.</p>
     </details>
   </section>
 
@@ -299,9 +299,9 @@ function gh(ruta, op) {
 }
 function errorGH(st, msg) {
   var e = new Error(msg); e.status = st;
-  if (st === 401) e.message = 'La llave no es válida o ya venció. Cree una nueva en GitHub y vuelva a entrar.';
-  else if (st === 403) e.message = 'La llave no tiene permiso para escribir en esta web. Revise que tenga «Contents: Read and write» sobre el repositorio ' + CONFIG.repo + '.';
-  else if (st === 404) e.message = 'No se encontró el repositorio ' + CONFIG.repo + ' con esta llave. Revise que la llave tenga acceso a ese repositorio.';
+  if (st === 401) e.message = 'La contraseña no es válida o ya venció. Cree una nueva en GitHub y vuelva a entrar.';
+  else if (st === 403) e.message = 'La contraseña no tiene permiso para escribir en esta web. Revise que tenga «Contents: Read and write» sobre el repositorio ' + CONFIG.repo + '.';
+  else if (st === 404) e.message = 'No se encontró el repositorio ' + CONFIG.repo + ' con esta contraseña. Revise que la contraseña tenga acceso a ese repositorio.';
   else if (!st) e.message = 'No hay conexión a internet. Intente de nuevo.';
   return e;
 }
@@ -378,7 +378,7 @@ function usada(ruta, d) {
 /* ---------- Ingreso ---------- */
 function entrar(llave, recordar) {
   estado.llave = llave.trim();
-  if (!/^(github_pat_|ghp_)/.test(estado.llave)) { aviso('aviso-ingreso', 'error', 'Eso no parece una llave de GitHub. Debe empezar por «github_pat_».'); return; }
+  if (!/^(github_pat_|ghp_)/.test(estado.llave)) { aviso('aviso-ingreso', 'error', 'Eso no parece una contraseña del panel. Debe empezar por «github_pat_».'); return; }
   cargando(true, 'Entrando…');
   gh('').then(function (repo) {
     if (repo.permissions && !repo.permissions.push) throw errorGH(403);
