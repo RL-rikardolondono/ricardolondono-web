@@ -1,0 +1,73 @@
+{
+ "nombre": "Ricardo Londoño González",
+ "titulo": "Médico · Investigador · Escritor · Conferencista",
+ "cargo": {
+  "texto": "Director de la Revista Colombiana de Medicina",
+  "url": "https://revistacolombianademedicina.com"
+ },
+ "frase": "Investigación, docencia y divulgación científica sobre autismo, TDAH y trastornos del neurodesarrollo.",
+ "foto": "/assets/img/perfil.jpg",
+ "fotoPortada": "/assets/img/portada.jpg",
+ "sobreMi": "Ricardo Londoño González es médico, con licencia en Seguridad y Salud en el Trabajo, investigador, escritor y conferencista. Su trabajo académico se centra en el trastorno del espectro autista (TEA), el TDAH y los trastornos del neurodesarrollo.\n\nEs director de la Revista Colombiana de Medicina y lidera seis grupos de investigación registrados en Minciencias, en autismo, neurodesarrollo e inteligencia artificial, VIH y enfermedades infecciosas, inteligencias múltiples, tecnologías de frontera y energías del futuro.\n\nHa dictado seminarios, talleres y conferencias para profesionales de la salud, docentes, padres y cuidadores en universidades y congresos de Medellín, Cartagena, Barranquilla, Bucaramanga, Santa Marta, Valledupar, Pasto y Sincelejo, entre otras ciudades.\n\nEs autor de una amplia obra publicada en Autores Editores, que abarca autismo y neurodesarrollo, medicina, medicina veterinaria, psicología y teología e historia del cristianismo.",
+ "cvlac": "https://scienti.minciencias.gov.co/cvlac/visualizador/generarCurriculoCv.do?cod_rh=0001393766",
+ "cifras": [
+  {
+   "valor": "6",
+   "texto": "grupos de investigación en Minciencias"
+  },
+  {
+   "valor": "30",
+   "texto": "libros publicados"
+  },
+  {
+   "valor": "8",
+   "texto": "ciudades con seminarios y congresos"
+  }
+ ],
+ "temas": [
+  "Trastorno del espectro autista (TEA)",
+  "TDAH y comorbilidades",
+  "Señales de alerta temprana en autismo",
+  "Diagnóstico diferencial entre autismo y TDAH",
+  "Autismo en el aula",
+  "Orientación a padres y cuidadores"
+ ],
+ "investigacion": [
+  {
+   "nombre": "Autiscan Analytics – Grupo de Investigación en Autismo e Inteligencia Artificial",
+   "texto": "Líneas: tamizaje y detección temprana del autismo con inteligencia artificial; neurodesarrollo, inclusión educativa e intervención en autismo.",
+   "url": "https://scienti.minciencias.gov.co/gruplac/jsp/visualiza/visualizagr.jsp?nro=00000000025253"
+  },
+  {
+   "nombre": "Autismo y Neurodesarrollo",
+   "texto": "Grupo creado en 2010.",
+   "url": ""
+  },
+  {
+   "nombre": "Grupo de Investigación en VIH y Enfermedades Infecciosas",
+   "texto": "Grupo creado en 2010 (COL0194131).",
+   "url": ""
+  },
+  {
+   "nombre": "Inteligencias Múltiples",
+   "texto": "Grupo creado en 2014.",
+   "url": ""
+  },
+  {
+   "nombre": "GENESIS – Grupo de Investigación en Tecnologías de Frontera para el Desarrollo Humano",
+   "texto": "Líneas: inteligencia artificial aplicada a salud y educación; neurotecnología, bioingeniería y biónica; robótica asistencial y educativa; computación cuántica y algoritmos avanzados; tecnologías emergentes y transformación digital.",
+   "url": "https://scienti.minciencias.gov.co/gruplac/jsp/visualiza/visualizagr.jsp?nro=00000000025514"
+  },
+  {
+   "nombre": "PROMETEO – Grupo de Investigación en Hidrógeno Verde y Energías del Futuro",
+   "texto": "Líneas: producción y almacenamiento de hidrógeno verde; energías renovables y almacenamiento energético.",
+   "url": "https://scienti.minciencias.gov.co/gruplac/jsp/visualiza/visualizagr.jsp?nro=00000000025513"
+  }
+ ],
+ "contacto": {
+  "texto": "Universidades, colegios, congresos, centros de salud e instituciones pueden invitar al Dr. Ricardo Londoño González a dictar conferencias, seminarios y capacitaciones sobre estos temas:",
+  "correo": "contacto@ricardolondono.com",
+  "whatsapp": "",
+  "instagram": "https://www.instagram.com/autismocolombia/"
+ }
+}

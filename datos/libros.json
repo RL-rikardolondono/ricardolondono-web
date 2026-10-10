@@ -1,0 +1,253 @@
+{
+ "categorias": [
+  "Autismo y neurodesarrollo",
+  "Medicina",
+  "Medicina veterinaria",
+  "Psicología, relaciones y liderazgo",
+  "Teología e historia del cristianismo",
+  "Otras obras"
+ ],
+ "tienda": "https://www.autoreseditores.com/rikardolondono",
+ "libros": [
+  {
+   "id": "30178",
+   "titulo": "Autismo: nuevas fronteras en neurodesarrollo",
+   "categoria": "Autismo y neurodesarrollo",
+   "url": "https://www.autoreseditores.com/libro/30178/ricardo-londono-gonzalez/autismo-nuevas-fronteras-en-neurodesarrollo.html",
+   "portada": "/assets/img/libros/30178.jpg",
+   "destacado": true
+  },
+  {
+   "id": "30291",
+   "titulo": "Autiscan Analytics®",
+   "categoria": "Autismo y neurodesarrollo",
+   "url": "https://www.autoreseditores.com/libro/30291/ricardo-londono-gonzalez/autiscan-analytics.html",
+   "portada": "/assets/img/libros/30291.jpg",
+   "destacado": false
+  },
+  {
+   "id": "28560",
+   "titulo": "Trastornos del neurodesarrollo y trastornos neurocognitivos",
+   "categoria": "Autismo y neurodesarrollo",
+   "url": "https://www.autoreseditores.com/libro/28560/ricardo-londono-gonzalez/trastornos-del-neurodesarrollo-y-trastornos-neurocognitivos.html",
+   "portada": "/assets/img/libros/28560.jpg",
+   "destacado": true
+  },
+  {
+   "id": "25862",
+   "titulo": "Manual Trastorno del Espectro Autista",
+   "categoria": "Autismo y neurodesarrollo",
+   "url": "https://www.autoreseditores.com/libro/25862/ricardo-londono-gonzalez/manual-trastorno-del-espectro-autista.html",
+   "portada": "/assets/img/libros/25862.jpg",
+   "destacado": true
+  },
+  {
+   "id": "25883",
+   "titulo": "TDAH: guía práctica de intervención",
+   "categoria": "Autismo y neurodesarrollo",
+   "url": "https://www.autoreseditores.com/libro/25883/ricardo-londono-gonzalez/tdah-guia-practica-de-intervencion.html",
+   "portada": "/assets/img/libros/25883.jpg",
+   "destacado": true
+  },
+  {
+   "id": "27197",
+   "titulo": "101 preguntas y respuestas sobre el autismo",
+   "categoria": "Autismo y neurodesarrollo",
+   "url": "https://www.autoreseditores.com/libro/27197/ricardo-londono-gonzalez/101-preguntas-y-respuestas-sobre-el-autismo.html",
+   "portada": "/assets/img/libros/27197.jpg",
+   "destacado": true
+  },
+  {
+   "id": "27108",
+   "titulo": "Divergente: el enigma del niño salvaje de Aveyron",
+   "categoria": "Autismo y neurodesarrollo",
+   "url": "https://www.autoreseditores.com/libro/27108/ricardo-londono-gonzalez/divergente.html",
+   "portada": "/assets/img/libros/27108.jpg",
+   "destacado": false
+  },
+  {
+   "id": "32768",
+   "titulo": "La desconexión perfecta",
+   "categoria": "Autismo y neurodesarrollo",
+   "url": "https://www.autoreseditores.com/libro/32768/ricardo-londono-gonzalez/la-desconexion-perfecta.html",
+   "portada": "/assets/img/libros/32768.jpg",
+   "destacado": false
+  },
+  {
+   "id": "27746",
+   "titulo": "Manual de Neuropatología",
+   "categoria": "Medicina",
+   "url": "https://www.autoreseditores.com/libro/27746/ricardo-londono-gonzalez/manual-de-neuropatologia.html",
+   "portada": "/assets/img/libros/27746.jpg",
+   "destacado": true
+  },
+  {
+   "id": "30870",
+   "titulo": "Semiología médica integral",
+   "categoria": "Medicina",
+   "url": "https://www.autoreseditores.com/libro/30870/ricardo-londono-gonzalez/semiologia-medica-integral.html",
+   "portada": "/assets/img/libros/30870.jpg",
+   "destacado": false
+  },
+  {
+   "id": "27369",
+   "titulo": "Parasitología aplicada",
+   "categoria": "Medicina",
+   "url": "https://www.autoreseditores.com/libro/27369/ricardo-londono-gonzalez/parasitologia-aplicada.html",
+   "portada": "/assets/img/libros/27369.jpg",
+   "destacado": false
+  },
+  {
+   "id": "34589",
+   "titulo": "Patología veterinaria",
+   "categoria": "Medicina veterinaria",
+   "url": "https://www.autoreseditores.com/libro/34589/ricardo-londono-gonzalez/patologia-veterinaria.html",
+   "portada": "/assets/img/libros/34589.jpg",
+   "destacado": false
+  },
+  {
+   "id": "29213",
+   "titulo": "Anatomía veterinaria",
+   "categoria": "Medicina veterinaria",
+   "url": "https://www.autoreseditores.com/libro/29213/ricardo-londono/anatomia-veterinaria.html",
+   "portada": "/assets/img/libros/29213.jpg",
+   "destacado": false
+  },
+  {
+   "id": "28819",
+   "titulo": "El sistema urinario en caninos",
+   "categoria": "Medicina veterinaria",
+   "url": "https://www.autoreseditores.com/libro/28819/ricardo-londono-gonzalez/el-sistema-urinario-en-caninos.html",
+   "portada": "/assets/img/libros/28819.jpg",
+   "destacado": false
+  },
+  {
+   "id": "27566",
+   "titulo": "Vademécum veterinario",
+   "categoria": "Medicina veterinaria",
+   "url": "https://www.autoreseditores.com/libro/27566/ricardo-londono-gonzalez/vademecum-veterinario.html",
+   "portada": "/assets/img/libros/27566.jpg",
+   "destacado": false
+  },
+  {
+   "id": "31095",
+   "titulo": "Cuando el amor duele",
+   "categoria": "Psicología, relaciones y liderazgo",
+   "url": "https://www.autoreseditores.com/libro/31095/ricardo-londono/cuando-el-amor-duele.html",
+   "portada": "/assets/img/libros/31095.jpg",
+   "destacado": false
+  },
+  {
+   "id": "33378",
+   "titulo": "14 arquitecturas del poder en la negociación",
+   "categoria": "Psicología, relaciones y liderazgo",
+   "url": "https://www.autoreseditores.com/libro/33378/ricardo-londono/14-arquitecturas-del-poder-en-la-negociacion.html",
+   "portada": "/assets/img/libros/33378.jpg",
+   "destacado": false
+  },
+  {
+   "id": "34107",
+   "titulo": "Inquebrantables",
+   "categoria": "Psicología, relaciones y liderazgo",
+   "url": "https://www.autoreseditores.com/libro/34107/ricardo-londono-gonzalez/inquebrantables.html",
+   "portada": "/assets/img/libros/34107.jpg",
+   "destacado": false
+  },
+  {
+   "id": "34288",
+   "titulo": "Teología fundamental",
+   "categoria": "Teología e historia del cristianismo",
+   "url": "https://www.autoreseditores.com/libro/34288/ricardo-londono-gonzalez/teologia-fundamental.html",
+   "portada": "/assets/img/libros/34288.jpg",
+   "destacado": false
+  },
+  {
+   "id": "33916",
+   "titulo": "Cristianismo bajo ataque",
+   "categoria": "Teología e historia del cristianismo",
+   "url": "https://www.autoreseditores.com/libro/33916/ricardo-londono-gonzalez/cristianismo-bajo-ataque.html",
+   "portada": "/assets/img/libros/33916.jpg",
+   "destacado": false
+  },
+  {
+   "id": "29350",
+   "titulo": "Historia de la Iglesia antigua",
+   "categoria": "Teología e historia del cristianismo",
+   "url": "https://www.autoreseditores.com/libro/29350/ricardo-londono-gonzalez/historia-de-la-iglesia-antigua.html",
+   "portada": "/assets/img/libros/29350.jpg",
+   "destacado": false
+  },
+  {
+   "id": "31474",
+   "titulo": "Historia de la Iglesia antigua, volumen 2",
+   "categoria": "Teología e historia del cristianismo",
+   "url": "https://www.autoreseditores.com/libro/31474/ricardo-londono-gonzalez/historia-de-la-iglesia-antigua-volumen-2.html",
+   "portada": "/assets/img/libros/31474.jpg",
+   "destacado": false
+  },
+  {
+   "id": "25534",
+   "titulo": "Los manuscritos sagrados",
+   "categoria": "Teología e historia del cristianismo",
+   "url": "https://www.autoreseditores.com/libro/25534/ricardo-londono-gonzalez/los-manuscritos-sagrados.html",
+   "portada": "/assets/img/libros/25534.jpg",
+   "destacado": false
+  },
+  {
+   "id": "26909",
+   "titulo": "Tratado de sociología cristiana fundamental",
+   "categoria": "Teología e historia del cristianismo",
+   "url": "https://www.autoreseditores.com/libro/26909/ricardo-londono-gonzalez/tratado-de-sociologia-cristiana-fundamental.html",
+   "portada": "/assets/img/libros/26909.jpg",
+   "destacado": false
+  },
+  {
+   "id": "22759",
+   "titulo": "Principios de filología bíblica",
+   "categoria": "Teología e historia del cristianismo",
+   "url": "https://www.autoreseditores.com/libro/22759/carlos-ricardo-londono-gonzalez/principios-de-filologia-biblica.html",
+   "portada": "/assets/img/libros/22759.jpg",
+   "destacado": false
+  },
+  {
+   "id": "21629",
+   "titulo": "Costumbres judaizantes en el cristianismo",
+   "categoria": "Teología e historia del cristianismo",
+   "url": "https://www.autoreseditores.com/libro/21629/ricardo-londono-gonzalez/costumbres-judaizantes-en-el-cristianismo.html",
+   "portada": "/assets/img/libros/21629.jpg",
+   "destacado": false
+  },
+  {
+   "id": "21590",
+   "titulo": "La Confesión de La Rochelle 1559",
+   "categoria": "Teología e historia del cristianismo",
+   "url": "https://www.autoreseditores.com/libro/21590/ricardo-londono-gonzalez/la-confesion-de-la-rochelle-1559.html",
+   "portada": "/assets/img/libros/21590.jpg",
+   "destacado": false
+  },
+  {
+   "id": "32319",
+   "titulo": "Después de ti",
+   "categoria": "Otras obras",
+   "url": "https://www.autoreseditores.com/libro/32319/ricardo-londono-gonzalez/despues-de-ti.html",
+   "portada": "/assets/img/libros/32319.jpg",
+   "destacado": false
+  },
+  {
+   "id": "32518",
+   "titulo": "Operación Causa Justa",
+   "categoria": "Otras obras",
+   "url": "https://www.autoreseditores.com/libro/32518/ricardo-londono-gonzalez/operacion-causa-justa.html",
+   "portada": "/assets/img/libros/32518.jpg",
+   "destacado": false
+  },
+  {
+   "id": "23889",
+   "titulo": "Tras las sombras del imperio",
+   "categoria": "Otras obras",
+   "url": "https://www.autoreseditores.com/libro/23889/ricardo-londono-gonzalez/tras-las-sombras-del-imperio.html",
+   "portada": "/assets/img/libros/23889.jpg",
+   "destacado": false
+  }
+ ]
+}

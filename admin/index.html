@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel de administración | ricardolondono.com</title>
+<link rel="icon" href="/assets/img/icono.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--azul:#0B4F8A;--azul2:#1867B0;--verde:#14A38B;--verde-osc:#0E8571;--wa:#1F8A4C;--fondo:#F4F8FB;--texto:#1C2B39;--suave:#5D6B78;--borde:#DCE5EE;--azul-claro:#E8F1FA;--verde-claro:#E3F6F2;--rojo:#C0392B;--rojo-claro:#FDECEA}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--texto);font-family:'Public Sans',system-ui,sans-serif;font-size:16px;line-height:1.55}
+h1,h2,h3{font-family:'Barlow Condensed',system-ui,sans-serif;margin:0 0 .4em;line-height:1.15}
+h1{font-size:2rem}h2{font-size:1.6rem}h3{font-size:1.25rem}
+a{color:var(--azul2)}
+.oculto{display:none!important}
+.barra{background:#fff;box-shadow:0 2px 12px rgba(28,43,57,.08);position:sticky;top:0;z-index:20}
+.barra__in{max-width:1100px;margin:0 auto;padding:0 16px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.marca{display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',system-ui,sans-serif;font-weight:700;font-size:1.2rem}
+.marca svg{width:36px;height:36px;flex:none}
+.marca small{display:block;font-family:'Public Sans',system-ui,sans-serif;font-weight:500;font-size:.75rem;color:var(--suave)}
+.acciones-barra{display:flex;gap:8px;flex-wrap:wrap}
+main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+.caja{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:22px;box-shadow:0 2px 14px rgba(11,79,138,.06);margin-bottom:18px}
+.boton{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:10px;border:0;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap}
+.boton:disabled{opacity:.55;cursor:not-allowed}
+.b-principal{background:var(--azul);color:#fff}.b-principal:hover{background:var(--azul2)}
+.b-accion{background:var(--verde);color:#fff}.b-accion:hover{background:var(--verde-osc)}
+.b-borde{background:#fff;color:var(--azul);border:1.5px solid var(--borde)}.b-borde:hover{border-color:var(--azul2)}
+.b-peligro{background:#fff;color:var(--rojo);border:1.5px solid #f1c6c0}.b-peligro:hover{background:var(--rojo-claro)}
+.b-chico{padding:6px 11px;font-size:.88rem}
+.b-grande{padding:14px 24px;font-size:1.05rem}
+label{display:block;font-weight:600;margin:14px 0 6px}
+.ayuda{font-weight:400;color:var(--suave);font-size:.88rem;margin-top:4px}
+input[type=text],input[type=url],input[type=email],input[type=date],input[type=password],input[type=tel],select,textarea{width:100%;padding:11px 12px;border:1.5px solid var(--borde);border-radius:10px;font:inherit;background:#fff;color:var(--texto)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--verde);box-shadow:0 0 0 3px var(--verde-claro)}
+textarea{min-height:240px;resize:vertical;line-height:1.6}
+.fila{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.fila{grid-template-columns:1fr}}
+.pestanas{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.pestana{background:#fff;border:1.5px solid var(--borde);padding:10px 16px;border-radius:10px;font:inherit;font-weight:600;cursor:pointer;color:var(--texto)}
+.pestana[aria-selected=true]{background:var(--verde);border-color:var(--verde);color:#fff}
+.lista{display:flex;flex-direction:column;gap:10px}
+.item{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--borde);border-radius:12px;padding:10px}
+.item img{width:84px;height:62px;object-fit:cover;border-radius:8px;background:var(--azul-claro);flex:none}
+.item.libro img{width:46px;height:68px}
+.item__txt{flex:1;min-width:0}
+.item__txt b{display:block;overflow:hidden;text-overflow:ellipsis}
+.item__txt span{color:var(--suave);font-size:.88rem}
+.item__btn{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:600px){.item{flex-wrap:wrap}.item__btn{width:100%;justify-content:flex-start}}
+.fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:10px}
+.foto{border:2px solid var(--borde);border-radius:12px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+.foto.portada{border-color:var(--verde)}
+.foto img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.foto div{display:flex;flex-direction:column;gap:4px;padding:6px}
+.foto .marca-portada{background:var(--verde);color:#fff;font-size:.78rem;font-weight:700;text-align:center;padding:3px}
+.subir{border:2px dashed var(--borde);border-radius:12px;padding:18px;text-align:center;background:var(--azul-claro);cursor:pointer;color:var(--azul);font-weight:600}
+.subir:hover{border-color:var(--azul2)}
+.herramientas{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.aviso{padding:12px 14px;border-radius:10px;margin:12px 0;font-weight:500}
+.aviso.ok{background:var(--verde-claro);color:var(--verde-osc)}
+.aviso.error{background:var(--rojo-claro);color:var(--rojo)}
+.aviso.info{background:var(--azul-claro);color:var(--azul)}
+.pie-acciones{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--borde)}
+.cargando{position:fixed;inset:0;background:rgba(244,248,251,.88);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:100;font-weight:600;color:var(--azul);text-align:center;padding:20px}
+.rueda{width:46px;height:46px;border:5px solid var(--azul-claro);border-top-color:var(--verde);border-radius:50%;animation:g 1s linear infinite}
+@keyframes g{to{transform:rotate(360deg)}}
+.pasos{padding-left:22px}.pasos li{margin-bottom:8px}
+.ingreso{max-width:520px;margin:40px auto}
+.proyecto-fila{display:grid;grid-template-columns:1fr 1.4fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+@media(max-width:700px){.proyecto-fila{grid-template-columns:1fr}}
+.cifra-fila{display:grid;grid-template-columns:.6fr 1.4fr;gap:8px;margin-bottom:8px}
+.firma{text-align:center;color:var(--suave);font-size:.82rem;padding:20px 16px 30px}
+.firma svg{width:18px;height:18px;vertical-align:-4px}
+.chk{display:flex;gap:8px;align-items:center;font-weight:500;margin-top:12px}
+.chk input{width:18px;height:18px}
+</style>
+</head>
+<body>
+<header class="barra"><div class="barra__in">
+  <div class="marca"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" aria-hidden="true"><rect x="4" y="4" width="192" height="192" rx="46" fill="#1E3A4C"/><g stroke="#FFFFFF" stroke-linecap="round"><polygon points="100,42 150.2,71 150.2,129 100,158 49.8,129 49.8,71" fill="none" stroke-opacity=".35" stroke-width="4"/><path d="M100 100L100 42M100 100L150.2 71M100 100L150.2 129M100 100L100 158M100 100L49.8 129M100 100L49.8 71" stroke-width="6"/></g><g fill="#FFFFFF"><circle cx="150.2" cy="71" r="10"/><circle cx="150.2" cy="129" r="10"/><circle cx="100" cy="158" r="10"/><circle cx="49.8" cy="129" r="10"/><circle cx="49.8" cy="71" r="10"/></g><circle cx="100" cy="42" r="13" fill="#E0A21A"/><circle cx="100" cy="100" r="20" fill="#E0A21A"/></svg>
+    <div>Panel de mi web<small id="nombre-sitio">ricardolondono.com</small></div></div>
+  <div class="acciones-barra oculto" id="acciones-barra">
+    <a class="boton b-borde b-chico" href="/" target="_blank" rel="noopener">Ver mi web</a>
+    <button class="boton b-borde b-chico" type="button" id="btn-salir">Salir</button>
+  </div>
+</div></header>
+
+<main>
+  <!-- INGRESO -->
+  <section id="vista-ingreso" class="ingreso">
+    <div class="caja">
+      <h1>Entrar al panel</h1>
+      <p>Pegue aquí su <b>llave de acceso</b> de GitHub. Esta llave solo sirve para esta web y queda guardada únicamente en este equipo.</p>
+      <label for="llave">Llave de acceso</label>
+      <input type="password" id="llave" autocomplete="off" placeholder="github_pat_…">
+      <label class="chk"><input type="checkbox" id="recordar" checked> Recordar en este equipo (no lo marque en computadores ajenos)</label>
+      <div id="aviso-ingreso"></div>
+      <div class="pie-acciones"><button class="boton b-principal b-grande" id="btn-entrar" type="button">Entrar</button></div>
+    </div>
+    <details class="caja">
+      <summary><b>¿No tiene la llave? Cómo crearla (una sola vez)</b></summary>
+      <ol class="pasos">
+        <li>Inicie sesión en GitHub y abra <a id="enlace-token" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">esta página para crear la llave</a>.</li>
+        <li>En <b>Token name</b> escriba: <i id="nombre-llave">Panel ricardolondono.com</i>. En <b>Expiration</b> elija <b>No expiration</b> (o la fecha que prefiera).</li>
+        <li>En <b>Repository access</b> elija <b>Only select repositories</b> y marque solo el repositorio <b id="nombre-repo">ricardolondono-web</b>.</li>
+        <li>En <b>Permissions → Repository permissions</b>, busque <b>Contents</b> y cámbielo a <b>Read and write</b>. No active nada más.</li>
+        <li>Pulse <b>Generate token</b>, copie la llave (empieza por <code>github_pat_</code>) y péguela arriba.</li>
+      </ol>
+      <p class="ayuda">Guarde la llave en un lugar seguro. Si la pierde o cree que alguien la vio, bórrela en GitHub y cree otra igual.</p>
+    </details>
+  </section>
+
+  <!-- PANEL -->
+  <section id="vista-panel" class="oculto">
+    <div class="pestanas" role="tablist">
+      <button class="pestana" role="tab" aria-selected="true" data-pestana="publicaciones">Publicaciones</button>
+      <button class="pestana" role="tab" aria-selected="false" data-pestana="libros">Libros</button>
+      <button class="pestana" role="tab" aria-selected="false" data-pestana="perfil">Sobre mí y contacto</button>
+    </div>
+    <div id="aviso-panel"></div>
+
+    <!-- Publicaciones -->
+    <div data-panel="publicaciones">
+      <div class="caja" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div><h2 style="margin:0">Publicaciones</h2><span class="ayuda">Conferencias, seminarios, lanzamientos y noticias.</span></div>
+        <button class="boton b-accion b-grande" type="button" id="btn-nueva">+ Nueva publicación</button>
+      </div>
+      <div class="lista" id="lista-pubs"></div>
+    </div>
+
+    <!-- Editor de publicación -->
+    <div data-panel="editor" class="oculto">
+      <div class="caja">
+        <h2 id="titulo-editor">Nueva publicación</h2>
+        <label for="p-titulo">Título</label>
+        <input type="text" id="p-titulo" maxlength="180" placeholder="Ej.: Seminario de autismo en la Universidad de Cartagena">
+        <div class="fila">
+          <div><label for="p-categoria">Categoría</label>
+            <input type="text" id="p-categoria" list="categorias-pub" placeholder="Conferencias y seminarios">
+            <datalist id="categorias-pub"></datalist>
+            <div class="ayuda">Elija una de la lista o escriba una nueva.</div></div>
+          <div><label for="p-fecha">Fecha</label><input type="date" id="p-fecha">
+            <label for="p-fechatexto" style="margin-top:8px">Fecha a mostrar <span class="ayuda">(opcional, ej.: «Mayo de 2024»)</span></label>
+            <input type="text" id="p-fechatexto" maxlength="40"></div>
+        </div>
+        <label for="p-texto">Texto</label>
+        <div class="herramientas">
+          <button class="boton b-borde b-chico" type="button" data-formato="subtitulo">Subtítulo</button>
+          <button class="boton b-borde b-chico" type="button" data-formato="negrita">Negrita</button>
+          <button class="boton b-borde b-chico" type="button" data-formato="vineta">Viñeta</button>
+        </div>
+        <textarea id="p-texto" placeholder="Escriba aquí. Deje una línea en blanco entre párrafos."></textarea>
+        <div class="ayuda">Una línea en blanco separa los párrafos. Las direcciones web (https://…) se convierten solas en enlaces.</div>
+
+        <label>Fotos</label>
+        <label class="subir" for="p-fotos">📷 Pulse aquí para agregar fotos (puede elegir varias)</label>
+        <input type="file" id="p-fotos" accept="image/*" multiple class="oculto">
+        <div class="ayuda">Las fotos se reducen solas para que la web cargue rápido. La foto con borde verde es la portada.</div>
+        <div class="fotos" id="p-lista-fotos"></div>
+
+        <div class="fila">
+          <div><label for="p-video">Video de YouTube <span class="ayuda">(opcional)</span></label><input type="url" id="p-video" placeholder="https://www.youtube.com/watch?v=…"></div>
+          <div><label for="p-enlace">Botón con enlace <span class="ayuda">(opcional)</span></label><input type="url" id="p-enlace" placeholder="https://…">
+            <input type="text" id="p-textoenlace" placeholder="Texto del botón, ej.: Ver el libro" style="margin-top:8px"></div>
+        </div>
+        <div id="aviso-editor"></div>
+        <div class="pie-acciones">
+          <button class="boton b-borde" type="button" id="btn-cancelar">Cancelar</button>
+          <button class="boton b-borde" type="button" id="btn-vista">Vista previa</button>
+          <button class="boton b-accion b-grande" type="button" id="btn-publicar">Publicar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Libros -->
+    <div data-panel="libros" class="oculto">
+      <div class="caja" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div><h2 style="margin:0">Libros</h2><span class="ayuda">Los marcados como destacados salen en la página de inicio (máximo 6).</span></div>
+        <button class="boton b-accion b-grande" type="button" id="btn-nuevo-libro">+ Nuevo libro</button>
+      </div>
+      <div class="caja oculto" id="editor-libro">
+        <h3 id="titulo-editor-libro">Nuevo libro</h3>
+        <label for="l-titulo">Título</label><input type="text" id="l-titulo" maxlength="160">
+        <div class="fila">
+          <div><label for="l-categoria">Categoría</label><input type="text" id="l-categoria" list="categorias-libro"><datalist id="categorias-libro"></datalist></div>
+          <div><label for="l-url">Enlace a la tienda</label><input type="url" id="l-url" placeholder="https://www.autoreseditores.com/libro/…"></div>
+        </div>
+        <label>Portada</label>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <img id="l-vista" alt="" style="width:90px;height:135px;object-fit:cover;border-radius:6px;background:var(--azul-claro)">
+          <label class="subir" for="l-portada" style="margin:0;flex:1">📷 Elegir imagen de portada</label>
+          <input type="file" id="l-portada" accept="image/*" class="oculto">
+        </div>
+        <label class="chk"><input type="checkbox" id="l-destacado"> Destacado en la página de inicio</label>
+        <div id="aviso-libro"></div>
+        <div class="pie-acciones">
+          <button class="boton b-borde" type="button" id="btn-cancelar-libro">Cancelar</button>
+          <button class="boton b-accion b-grande" type="button" id="btn-guardar-libro">Publicar</button>
+        </div>
+      </div>
+      <div class="lista" id="lista-libros"></div>
+    </div>
+
+    <!-- Perfil -->
+    <div data-panel="perfil" class="oculto">
+      <div class="caja">
+        <h2>Sobre mí</h2>
+        <div class="fila">
+          <div><label for="s-nombre">Nombre</label><input type="text" id="s-nombre"></div>
+          <div><label for="s-titulo">Profesión (debajo del nombre)</label><input type="text" id="s-titulo"></div>
+        </div>
+        <label for="s-frase">Frase principal de la portada</label><input type="text" id="s-frase" maxlength="220">
+        <label for="s-sobre">Texto «Sobre mí»</label><textarea id="s-sobre" style="min-height:200px"></textarea>
+        <label for="s-temas">Temas de conferencias <span class="ayuda">(uno por línea)</span></label><textarea id="s-temas" style="min-height:120px"></textarea>
+        <label>Cifras destacadas</label><div id="s-cifras"></div>
+        <div class="fila">
+          <div><label>Foto de «Sobre mí»</label><img id="s-foto-vista" alt="" style="width:120px;height:150px;object-fit:cover;border-radius:10px;background:var(--azul-claro);margin-bottom:8px">
+            <label class="subir" for="s-foto">Cambiar foto</label><input type="file" id="s-foto" accept="image/*" class="oculto"></div>
+          <div><label>Foto de la portada</label><img id="s-portada-vista" alt="" style="width:150px;height:150px;object-fit:cover;border-radius:10px;background:var(--azul-claro);margin-bottom:8px">
+            <label class="subir" for="s-portada">Cambiar foto</label><input type="file" id="s-portada" accept="image/*" class="oculto"></div>
+        </div>
+      </div>
+      <div class="caja">
+        <h2>Contacto</h2>
+        <label for="c-texto">Texto de invitación</label><input type="text" id="c-texto">
+        <div class="fila">
+          <div><label for="c-correo">Correo</label><input type="email" id="c-correo"></div>
+          <div><label for="c-whatsapp">WhatsApp <span class="ayuda">(opcional, solo números)</span></label><input type="tel" id="c-whatsapp"></div>
+        </div>
+        <label for="c-instagram">Instagram <span class="ayuda">(dirección completa)</span></label><input type="url" id="c-instagram">
+      </div>
+      <div class="caja">
+        <h2>Investigación</h2>
+        <div class="fila">
+          <div><label for="s-cargo">Cargo destacado <span class="ayuda">(sale bajo su nombre)</span></label><input type="text" id="s-cargo" placeholder="Director de la Revista Colombiana de Medicina"></div>
+          <div><label for="s-cargo-url">Enlace del cargo <span class="ayuda">(opcional)</span></label><input type="url" id="s-cargo-url" placeholder="https://…"></div>
+        </div>
+        <label for="s-cvlac">Enlace a su CvLAC <span class="ayuda">(opcional, la dirección pública de su hoja de vida en Minciencias)</span></label><input type="url" id="s-cvlac" placeholder="https://scienti.minciencias.gov.co/cvlac/…">
+        <label>Grupos de investigación</label>
+        <div class="ayuda" style="margin-bottom:10px">Nombre del grupo, línea de investigación y enlace público de GrupLAC (puede dejarlo vacío).</div>
+        <div id="s-proyectos"></div>
+        <button class="boton b-borde b-chico" type="button" id="btn-mas-proyecto">+ Agregar grupo</button>
+      </div>
+      <div id="aviso-perfil"></div>
+      <div class="pie-acciones"><button class="boton b-accion b-grande" type="button" id="btn-guardar-perfil">Publicar cambios</button></div>
+    </div>
+  </section>
+</main>
+<p class="firma">Panel desarrollado por SkyNet Genesis · contacto@skynetgenesis.com · WhatsApp 3044375758</p>
+
+<div class="cargando oculto" id="cargando"><div class="rueda"></div><div id="cargando-texto">Cargando…</div></div>
+
+<script src="/assets/js/formato.js"></script>
+<script>
+/* ===== Configuración de esta web (cambiar solo esto al copiar el panel a otra web) ===== */
+var CONFIG = {
+  dueno: 'rl-rikardolondono',          // usuario de GitHub
+  repo: 'ricardolondono-web',         // repositorio de la web
+  rama: 'main',
+  sitio: 'ricardolondono.com',
+  claveLocal: 'panel-ricardolondono-llave'
+};
+/* ======================================================================================= */
+
+var F = window.Formato;
+var API = 'https://api.github.com/repos/' + CONFIG.dueno + '/' + CONFIG.repo;
+var RESERVADAS = ['admin', 'assets', 'datos', 'libros', 'publicaciones', 'skynet-politica-de-privacidad', '404', 'index', 'sitemap', 'robots', 'cname'];
+var estado = { llave: '', sitio: null, pubs: null, libros: null, commitBase: '', cambiosSinGuardar: false };
+var nuevasImagenes = {};   // ruta -> dataURL (pendientes de subir)
+var borrarRutas = [];      // rutas a borrar en el próximo guardado
+var pendientesPerfil = {}; // fotos nuevas de «Sobre mí» aún sin publicar
+
+function $(id) { return document.getElementById(id); }
+function aviso(id, tipo, txt) { var el = $(id); el.innerHTML = ''; if (!txt) return; var d = document.createElement('div'); d.className = 'aviso ' + tipo; d.textContent = txt; el.appendChild(d); if (tipo !== 'info') d.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+function cargando(on, txt) { $('cargando').classList.toggle('oculto', !on); $('cargando-texto').textContent = txt || 'Cargando…'; }
+function leerLS(k) { try { return localStorage.getItem(k) || sessionStorage.getItem(k) || ''; } catch (e) { return ''; } }
+function guardarLS(k, v, recordar) { try { (recordar ? localStorage : sessionStorage).setItem(k, v); } catch (e) {} }
+function borrarLS(k) { try { localStorage.removeItem(k); sessionStorage.removeItem(k); } catch (e) {} }
+function clonar(o) { return JSON.parse(JSON.stringify(o)); }
+
+$('nombre-sitio').textContent = CONFIG.sitio;
+$('nombre-repo').textContent = CONFIG.repo;
+$('nombre-llave').textContent = 'Panel ' + CONFIG.sitio;
+
+/* ---------- GitHub ---------- */
+function gh(ruta, op) {
+  op = op || {};
+  var h = { 'Authorization': 'Bearer ' + estado.llave, 'Accept': op.accept || 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+  if (op.body) h['Content-Type'] = 'application/json';
+  return fetch(ruta.indexOf('http') === 0 ? ruta : API + ruta, { method: op.method || 'GET', headers: h, body: op.body ? JSON.stringify(op.body) : undefined, cache: 'no-store' })
+    .then(function (r) {
+      if (op.accept === 'application/vnd.github.raw') return r.ok ? r.text() : r.text().then(function (t) { throw errorGH(r.status, t); });
+      return r.text().then(function (t) { var j = t ? JSON.parse(t) : {}; if (!r.ok) throw errorGH(r.status, j.message || t); return j; });
+    });
+}
+function errorGH(st, msg) {
+  var e = new Error(msg); e.status = st;
+  if (st === 401) e.message = 'La llave no es válida o ya venció. Cree una nueva en GitHub y vuelva a entrar.';
+  else if (st === 403) e.message = 'La llave no tiene permiso para escribir en esta web. Revise que tenga «Contents: Read and write» sobre el repositorio ' + CONFIG.repo + '.';
+  else if (st === 404) e.message = 'No se encontró el repositorio ' + CONFIG.repo + ' con esta llave. Revise que la llave tenga acceso a ese repositorio.';
+  else if (!st) e.message = 'No hay conexión a internet. Intente de nuevo.';
+  return e;
+}
+function leerArchivo(ruta) { return gh('/contents/' + ruta + '?ref=' + CONFIG.rama, { accept: 'application/vnd.github.raw' }); }
+function refActual() { return gh('/git/ref/heads/' + CONFIG.rama).then(function (r) { return r.object.sha; }); }
+
+// Sube en UN solo cambio: textos, imágenes nuevas y archivos a borrar.
+function confirmarCambios(textos, imagenes, borrar, mensaje) {
+  var base, arbolBase;
+  return refActual().then(function (sha) {
+    if (estado.commitBase && sha !== estado.commitBase) {
+      var e = new Error('La web fue modificada desde otro lugar mientras usted trabajaba. Pulse «Recargar» para traer la versión más reciente (copie antes su texto si no quiere perderlo).');
+      e.recargar = true; throw e;
+    }
+    base = sha;
+    return gh('/git/commits/' + sha);
+  }).then(function (c) {
+    arbolBase = c.tree.sha;
+    var rutas = Object.keys(imagenes);
+    return rutas.reduce(function (p, ruta, i) {
+      return p.then(function (acc) {
+        cargando(true, 'Subiendo foto ' + (i + 1) + ' de ' + rutas.length + '…');
+        return gh('/git/blobs', { method: 'POST', body: { content: imagenes[ruta].split(',')[1], encoding: 'base64' } })
+          .then(function (b) { acc.push({ path: ruta.replace(/^\//, ''), mode: '100644', type: 'blob', sha: b.sha }); return acc; });
+      });
+    }, Promise.resolve([]));
+  }).then(function (arbol) {
+    cargando(true, 'Publicando…');
+    Object.keys(textos).forEach(function (ruta) { arbol.push({ path: ruta, mode: '100644', type: 'blob', content: textos[ruta] }); });
+    borrar.forEach(function (ruta) { arbol.push({ path: ruta.replace(/^\//, ''), mode: '100644', type: 'blob', sha: null }); });
+    return gh('/git/trees', { method: 'POST', body: { base_tree: arbolBase, tree: arbol } });
+  }).then(function (t) {
+    return gh('/git/commits', { method: 'POST', body: { message: mensaje, tree: t.sha, parents: [base] } });
+  }).then(function (c) {
+    return gh('/git/refs/heads/' + CONFIG.rama, { method: 'PATCH', body: { sha: c.sha } }).then(function () { estado.commitBase = c.sha; return c; });
+  });
+}
+
+// Copia de los datos actuales para preparar un cambio sin tocar los datos hasta que se publique.
+function candidato() { return { sitio: clonar(estado.sitio), pubs: clonar(estado.pubs), libros: clonar(estado.libros) }; }
+
+// Regenera todas las páginas con los datos «cand» y publica. Solo si sale bien, «cand» pasa a ser el estado.
+function publicar(cand, mensaje, avisoId, alTerminar) {
+  cargando(true, 'Preparando…');
+  var pubsDatos = { publicaciones: F.ordenar(cand.pubs) };
+  var paginas = F.generarTodo(cand.sitio, pubsDatos, cand.libros, new Date().getFullYear());
+  paginas['datos/sitio.json'] = JSON.stringify(cand.sitio, null, 1);
+  paginas['datos/publicaciones.json'] = JSON.stringify(pubsDatos, null, 1);
+  paginas['datos/libros.json'] = JSON.stringify(cand.libros, null, 1);
+  var imgs = {}; Object.keys(nuevasImagenes).forEach(function (r) { if (usada(r, cand)) imgs[r] = nuevasImagenes[r]; });
+  var borrar = borrarRutas.filter(function (r) { return !usada(r, cand) && !nuevasImagenes[r]; });
+  return confirmarCambios(paginas, imgs, borrar, mensaje).then(function () {
+    estado.sitio = cand.sitio; estado.pubs = cand.pubs; estado.libros = cand.libros;
+    nuevasImagenes = {}; borrarRutas = []; pendientesPerfil = {}; estado.cambiosSinGuardar = false;
+    cargando(false);
+    if (alTerminar) alTerminar();
+    aviso('aviso-panel', 'ok', '✔ Publicado. Su web se actualiza en 1 o 2 minutos (si no ve el cambio, recargue la página de su web).');
+    return true;
+  }).catch(function (e) {
+    cargando(false);
+    aviso(avisoId, 'error', 'No se pudo publicar: ' + e.message);
+    if (e.recargar) { var b = document.createElement('button'); b.className = 'boton b-principal b-chico'; b.textContent = 'Recargar'; b.style.marginTop = '8px'; b.onclick = function () { estado.cambiosSinGuardar = false; location.reload(); }; $(avisoId).appendChild(b); }
+    return false;
+  });
+}
+
+// ¿La ruta de imagen se usa en los datos?
+function usada(ruta, d) {
+  d = d || estado;
+  var s = JSON.stringify(d.sitio) + JSON.stringify(d.pubs) + JSON.stringify(d.libros);
+  return s.indexOf('"' + ruta + '"') >= 0;
+}
+
+/* ---------- Ingreso ---------- */
+function entrar(llave, recordar) {
+  estado.llave = llave.trim();
+  if (!/^(github_pat_|ghp_)/.test(estado.llave)) { aviso('aviso-ingreso', 'error', 'Eso no parece una llave de GitHub. Debe empezar por «github_pat_».'); return; }
+  cargando(true, 'Entrando…');
+  gh('').then(function (repo) {
+    if (repo.permissions && !repo.permissions.push) throw errorGH(403);
+    return Promise.all([refActual(), leerArchivo('datos/sitio.json'), leerArchivo('datos/publicaciones.json'), leerArchivo('datos/libros.json')]);
+  }).then(function (r) {
+    estado.commitBase = r[0];
+    estado.sitio = JSON.parse(r[1]); estado.pubs = JSON.parse(r[2]).publicaciones || []; estado.libros = JSON.parse(r[3]);
+    guardarLS(CONFIG.claveLocal, estado.llave, recordar);
+    $('vista-ingreso').classList.add('oculto'); $('vista-panel').classList.remove('oculto'); $('acciones-barra').classList.remove('oculto');
+    cargando(false); pintarPubs(); pintarLibros(); pintarPerfil();
+  }).catch(function (e) {
+    cargando(false); estado.llave = '';
+    if (e.status === 401) borrarLS(CONFIG.claveLocal);
+    $('vista-ingreso').classList.remove('oculto');
+    aviso('aviso-ingreso', 'error', e.message);
+  });
+}
+$('btn-entrar').onclick = function () { entrar($('llave').value, $('recordar').checked); };
+$('llave').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('btn-entrar').click(); });
+$('btn-salir').onclick = function () {
+  if (estado.cambiosSinGuardar && !confirm('Tiene cambios sin publicar. ¿Salir de todos modos?')) return;
+  borrarLS(CONFIG.claveLocal); estado.cambiosSinGuardar = false; location.reload();
+};
+window.addEventListener('beforeunload', function (e) { if (estado.cambiosSinGuardar) { e.preventDefault(); e.returnValue = ''; } });
+(function () { var g = leerLS(CONFIG.claveLocal); if (g) entrar(g, true); })();
+
+/* ---------- Pestañas ---------- */
+function verPanel(nombre) {
+  document.querySelectorAll('[data-panel]').forEach(function (p) { p.classList.toggle('oculto', p.getAttribute('data-panel') !== nombre); });
+  document.querySelectorAll('.pestana').forEach(function (b) { b.setAttribute('aria-selected', b.getAttribute('data-pestana') === nombre || (nombre === 'editor' && b.getAttribute('data-pestana') === 'publicaciones') ? 'true' : 'false'); });
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('.pestana').forEach(function (b) {
+  b.onclick = function () {
+    if (estado.cambiosSinGuardar && !confirm('Tiene cambios sin publicar. ¿Cambiar de sección y descartarlos?')) return;
+    if (estado.cambiosSinGuardar) descartarCambios();
+    aviso('aviso-panel', '', ''); verPanel(b.getAttribute('data-pestana'));
+  };
+});
+function descartarCambios() {
+  estado.cambiosSinGuardar = false; nuevasImagenes = {}; borrarRutas = []; pendientesPerfil = {};
+  pintarPubs(); pintarLibros(); pintarPerfil(); $('editor-libro').classList.add('oculto');
+}
+
+/* ---------- Imágenes ---------- */
+function reducirImagen(archivo, max, calidad) {
+  return new Promise(function (ok, mal) {
+    var url = URL.createObjectURL(archivo), im = new Image();
+    im.onload = function () {
+      var s = Math.min(1, max / Math.max(im.naturalWidth, im.naturalHeight));
+      var c = document.createElement('canvas'); c.width = Math.round(im.naturalWidth * s); c.height = Math.round(im.naturalHeight * s);
+      var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url); ok(c.toDataURL('image/jpeg', calidad || 0.82));
+    };
+    im.onerror = function () { URL.revokeObjectURL(url); mal(new Error('No se pudo leer la foto «' + archivo.name + '». Si es una foto de iPhone (HEIC), envíesela primero por WhatsApp o tómele una captura de pantalla y súbala de nuevo.')); };
+    im.src = url;
+  });
+}
+function srcImagen(ruta) { return nuevasImagenes[ruta] || ruta; }
+function nombreUnico(prefijo) { return prefijo + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5) + '.jpg'; }
+
+/* ---------- Publicaciones ---------- */
+var editando = null; // copia de la publicación en edición
+var esNueva = false;
+
+function pintarPubs() {
+  var cont = $('lista-pubs'); cont.innerHTML = '';
+  var lista = F.ordenar(estado.pubs);
+  if (!lista.length) { cont.innerHTML = '<div class="caja">Aún no hay publicaciones.</div>'; }
+  lista.forEach(function (p) {
+    var d = document.createElement('div'); d.className = 'item';
+    var img = document.createElement('img'); img.src = srcImagen(p.portada || ''); img.alt = ''; img.loading = 'lazy';
+    var t = document.createElement('div'); t.className = 'item__txt';
+    var b = document.createElement('b'); b.textContent = p.titulo;
+    var s = document.createElement('span'); s.textContent = (p.categoria || '') + (F.etiquetaFecha(p) ? ' · ' + F.etiquetaFecha(p) : '');
+    t.appendChild(b); t.appendChild(s);
+    var acc = document.createElement('div'); acc.className = 'item__btn';
+    acc.appendChild(boton('Ver', 'b-borde b-chico', function () { window.open('/' + p.slug + '/', '_blank'); }));
+    acc.appendChild(boton('Editar', 'b-principal b-chico', function () { abrirEditor(p); }));
+    acc.appendChild(boton('Eliminar', 'b-peligro b-chico', function () { eliminarPub(p); }));
+    d.appendChild(img); d.appendChild(t); d.appendChild(acc); cont.appendChild(d);
+  });
+  var cats = []; estado.pubs.forEach(function (p) { if (p.categoria && cats.indexOf(p.categoria) < 0) cats.push(p.categoria); });
+  ['Conferencias y seminarios', 'Libros', 'Noticias', 'Artículos'].forEach(function (c) { if (cats.indexOf(c) < 0) cats.push(c); });
+  $('categorias-pub').innerHTML = cats.map(function (c) { return '<option value="' + F.esc(c) + '">'; }).join('');
+}
+function boton(txt, clases, fn) { var b = document.createElement('button'); b.type = 'button'; b.className = 'boton ' + clases; b.textContent = txt; b.onclick = fn; return b; }
+
+$('btn-nueva').onclick = function () { abrirEditor(null); };
+function abrirEditor(p) {
+  esNueva = !p;
+  editando = p ? clonar(p) : { slug: '', titulo: '', fecha: '', etiquetaFecha: '', categoria: 'Conferencias y seminarios', portada: '', fotos: [], contenido: '', video: '' };
+  $('titulo-editor').textContent = esNueva ? 'Nueva publicación' : 'Editar publicación';
+  $('p-titulo').value = editando.titulo;
+  $('p-categoria').value = editando.categoria || '';
+  $('p-fecha').value = (editando.fecha || new Date().toISOString()).slice(0, 10);
+  if (esNueva) { var h = new Date(); $('p-fecha').value = h.getFullYear() + '-' + String(h.getMonth() + 1).padStart(2, '0') + '-' + String(h.getDate()).padStart(2, '0'); }
+  $('p-fechatexto').value = editando.etiquetaFecha || '';
+  $('p-texto').value = editando.contenido || '';
+  $('p-video').value = editando.video || '';
+  $('p-enlace').value = editando.enlace || '';
+  $('p-textoenlace').value = editando.textoEnlace || '';
+  aviso('aviso-editor', '', ''); aviso('aviso-panel', '', '');
+  pintarFotos(); verPanel('editor'); $('p-titulo').focus();
+}
+['p-titulo', 'p-categoria', 'p-fecha', 'p-fechatexto', 'p-texto', 'p-video', 'p-enlace', 'p-textoenlace'].forEach(function (id) { $(id).addEventListener('input', function () { estado.cambiosSinGuardar = true; }); });
+
+function todasFotos() { return (editando.portada ? [editando.portada] : []).concat(editando.fotos || []); }
+function pintarFotos() {
+  var cont = $('p-lista-fotos'); cont.innerHTML = '';
+  todasFotos().forEach(function (ruta, i) {
+    var d = document.createElement('div'); d.className = 'foto' + (i === 0 ? ' portada' : '');
+    var img = document.createElement('img'); img.src = srcImagen(ruta); img.alt = '';
+    var b = document.createElement('div');
+    if (i === 0) { var m = document.createElement('span'); m.className = 'marca-portada'; m.textContent = 'PORTADA'; b.appendChild(m); }
+    else b.appendChild(boton('Usar de portada', 'b-borde b-chico', function () { var f = todasFotos(); f.splice(i, 1); f.unshift(ruta); editando.portada = f[0]; editando.fotos = f.slice(1); estado.cambiosSinGuardar = true; pintarFotos(); }));
+    b.appendChild(boton('Quitar', 'b-peligro b-chico', function () { var f = todasFotos(); f.splice(i, 1); editando.portada = f[0] || ''; editando.fotos = f.slice(1); if (borrarRutas.indexOf(ruta) < 0) borrarRutas.push(ruta); estado.cambiosSinGuardar = true; pintarFotos(); }));
+    d.appendChild(img); d.appendChild(b); cont.appendChild(d);
+  });
+}
+$('p-fotos').addEventListener('change', function () {
+  var archivos = Array.prototype.slice.call(this.files || []); this.value = '';
+  if (!archivos.length) return;
+  var base = F.slugify($('p-titulo').value || editando.slug || 'publicacion').slice(0, 40) || 'publicacion';
+  cargando(true, 'Preparando fotos…');
+  archivos.reduce(function (p, a) {
+    return p.then(function () {
+      return reducirImagen(a, 1600, 0.82).then(function (dataUrl) {
+        var ruta = '/assets/img/publicaciones/' + nombreUnico(base);
+        nuevasImagenes[ruta] = dataUrl;
+        if (!editando.portada) editando.portada = ruta; else editando.fotos.push(ruta);
+      }).catch(function (e) { aviso('aviso-editor', 'error', e.message); });
+    });
+  }, Promise.resolve()).then(function () { cargando(false); estado.cambiosSinGuardar = true; pintarFotos(); });
+});
+
+// Botones de formato
+document.querySelectorAll('[data-formato]').forEach(function (b) {
+  b.onclick = function () {
+    var ta = $('p-texto'), ini = ta.selectionStart, fin = ta.selectionEnd, v = ta.value, sel = v.slice(ini, fin);
+    var tipo = b.getAttribute('data-formato'), nuevo;
+    if (tipo === 'negrita') nuevo = '**' + (sel || 'texto en negrita') + '**';
+    else if (tipo === 'subtitulo') nuevo = (ini > 0 && v[ini - 1] !== '\n' ? '\n\n' : '') + '## ' + (sel || 'Subtítulo') + '\n\n';
+    else nuevo = (ini > 0 && v[ini - 1] !== '\n' ? '\n' : '') + (sel ? sel.split('\n').map(function (l) { return '- ' + l; }).join('\n') : '- ');
+    ta.value = v.slice(0, ini) + nuevo + v.slice(fin);
+    ta.focus(); ta.selectionStart = ta.selectionEnd = ini + nuevo.length;
+    estado.cambiosSinGuardar = true;
+  };
+});
+
+function leerFormulario() {
+  var p = clonar(editando);
+  p.titulo = $('p-titulo').value.trim();
+  p.categoria = $('p-categoria').value.trim() || 'Publicación';
+  var f = $('p-fecha').value || new Date().toISOString().slice(0, 10);
+  var horaPrevia = (editando.fecha && editando.fecha.slice(0, 10) === f) ? editando.fecha.slice(10) : 'T12:00:00';
+  p.fecha = f + (horaPrevia || 'T12:00:00');
+  p.etiquetaFecha = $('p-fechatexto').value.trim();
+  // Publicaciones antiguas sin fecha conocida: si no se toca la fecha, se sigue sin mostrar.
+  if (!p.etiquetaFecha && editando.etiquetaFecha === null && editando.fecha && editando.fecha.slice(0, 10) === f) p.etiquetaFecha = null;
+  p.contenido = $('p-texto').value.replace(/\r/g, '').trim();
+  p.video = $('p-video').value.trim();
+  var en = $('p-enlace').value.trim();
+  if (en) { p.enlace = en; p.textoEnlace = $('p-textoenlace').value.trim() || 'Más información'; } else { delete p.enlace; delete p.textoEnlace; }
+  return p;
+}
+function validar(p) {
+  if (!p.titulo) return 'Escriba el título.';
+  if (p.video && !F.idYoutube(p.video)) return 'La dirección del video no parece de YouTube. Cópiela desde el botón «Compartir» del video.';
+  if (p.enlace && !/^https?:\/\//.test(p.enlace)) return 'El enlace del botón debe empezar por https://';
+  return '';
+}
+function asignarSlug(p, pubs) {
+  if (p.slug) return;
+  var base = F.slugify(p.titulo) || 'publicacion';
+  if (RESERVADAS.indexOf(base) >= 0) base = 'publicacion-' + base;
+  var s = base, n = 2;
+  while (pubs.some(function (x) { return x.slug === s; })) s = base + '-' + (n++);
+  p.slug = s;
+}
+
+$('btn-cancelar').onclick = function () {
+  if (estado.cambiosSinGuardar && !confirm('¿Descartar los cambios de esta publicación?')) return;
+  Object.keys(nuevasImagenes).forEach(function (r) { if (!usada(r)) delete nuevasImagenes[r]; });
+  borrarRutas = []; estado.cambiosSinGuardar = false; verPanel('publicaciones');
+};
+$('btn-vista').onclick = function () {
+  var p = leerFormulario(); var err = validar(p); if (err) { aviso('aviso-editor', 'error', err); return; }
+  if (!p.slug) p.slug = 'vista-previa';
+  var html = F.paginaPublicacion(estado.sitio, p, new Date().getFullYear());
+  Object.keys(nuevasImagenes).forEach(function (r) { html = html.split('"' + r + '"').join('"' + nuevasImagenes[r] + '"'); });
+  html = html.replace('<head>', '<head><base href="' + location.origin + '/">');
+  html = html.replace('<body>', '<body><div style="background:#E0A21A;color:#1C2B39;text-align:center;padding:8px;font-weight:700;font-family:sans-serif">VISTA PREVIA — todavía no está publicada</div>');
+  var w = window.open('', '_blank');
+  if (!w) { aviso('aviso-editor', 'error', 'El navegador bloqueó la ventana de vista previa. Permita las ventanas emergentes para este sitio.'); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+};
+$('btn-publicar').onclick = function () {
+  var p = leerFormulario(); var err = validar(p); if (err) { aviso('aviso-editor', 'error', err); return; }
+  if (!p.portada) { if (!confirm('La publicación no tiene fotos. ¿Publicarla así?')) return; }
+  var cand = candidato();
+  asignarSlug(p, cand.pubs);
+  var i = cand.pubs.findIndex(function (x) { return x.slug === p.slug; });
+  if (i >= 0 && !esNueva) cand.pubs[i] = p; else cand.pubs.push(p);
+  publicar(cand, (esNueva ? 'Nueva publicación: ' : 'Edición: ') + p.titulo, 'aviso-editor', function () { pintarPubs(); verPanel('publicaciones'); })
+    .then(function (ok) { if (ok) aviso('aviso-panel', 'ok', '✔ Publicado. En 1 o 2 minutos podrá verla en ' + F.SITIO + '/' + p.slug + '/'); });
+};
+
+function eliminarPub(p) {
+  if (!confirm('¿Eliminar definitivamente «' + p.titulo + '»? La página dejará de existir en su web.')) return;
+  var cand = candidato();
+  cand.pubs = cand.pubs.filter(function (x) { return x.slug !== p.slug; });
+  borrarRutas = (p.portada ? [p.portada] : []).concat(p.fotos || []);
+  borrarRutas.push('/' + p.slug + '/index.html');
+  publicar(cand, 'Eliminada: ' + p.titulo, 'aviso-panel', pintarPubs).then(function (ok) { if (!ok) borrarRutas = []; });
+}
+
+/* ---------- Libros ---------- */
+var libroEdit = null;
+function pintarLibros() {
+  var cont = $('lista-libros'); cont.innerHTML = '';
+  var L = estado.libros;
+  var cats = (L.categorias || []).slice(); (L.libros || []).forEach(function (l) { if (cats.indexOf(l.categoria) < 0) cats.push(l.categoria); });
+  $('categorias-libro').innerHTML = cats.map(function (c) { return '<option value="' + F.esc(c) + '">'; }).join('');
+  cats.forEach(function (c) {
+    var ls = (L.libros || []).filter(function (l) { return l.categoria === c; });
+    if (!ls.length) return;
+    var h = document.createElement('h3'); h.textContent = c + ' (' + ls.length + ')'; h.style.marginTop = '12px'; cont.appendChild(h);
+    ls.forEach(function (l) {
+      var d = document.createElement('div'); d.className = 'item libro';
+      var img = document.createElement('img'); img.src = srcImagen(l.portada || ''); img.alt = ''; img.loading = 'lazy';
+      var t = document.createElement('div'); t.className = 'item__txt';
+      var b = document.createElement('b'); b.textContent = l.titulo; var s = document.createElement('span'); s.textContent = l.destacado ? '★ Destacado en inicio' : '';
+      t.appendChild(b); t.appendChild(s);
+      var acc = document.createElement('div'); acc.className = 'item__btn';
+      acc.appendChild(boton('Editar', 'b-principal b-chico', function () { abrirLibro(l); }));
+      acc.appendChild(boton('Eliminar', 'b-peligro b-chico', function () { eliminarLibro(l); }));
+      d.appendChild(img); d.appendChild(t); d.appendChild(acc); cont.appendChild(d);
+    });
+  });
+}
+$('btn-nuevo-libro').onclick = function () { abrirLibro(null); };
+function abrirLibro(l) {
+  libroEdit = l ? clonar(l) : { id: '', titulo: '', categoria: (estado.libros.categorias || [])[0] || '', url: '', portada: '', destacado: false };
+  $('titulo-editor-libro').textContent = l ? 'Editar libro' : 'Nuevo libro';
+  $('l-titulo').value = libroEdit.titulo; $('l-categoria').value = libroEdit.categoria; $('l-url').value = libroEdit.url;
+  $('l-destacado').checked = !!libroEdit.destacado; if (libroEdit.portada) $('l-vista').src = srcImagen(libroEdit.portada); else $('l-vista').removeAttribute('src');
+  aviso('aviso-libro', '', ''); $('editor-libro').classList.remove('oculto'); $('editor-libro').scrollIntoView({ behavior: 'smooth' });
+}
+$('l-portada').addEventListener('change', function () {
+  var a = this.files && this.files[0]; this.value = ''; if (!a) return;
+  reducirImagen(a, 700, 0.85).then(function (d) {
+    var ruta = '/assets/img/libros/' + nombreUnico(F.slugify($('l-titulo').value || 'libro').slice(0, 40) || 'libro');
+    nuevasImagenes[ruta] = d;
+    if (libroEdit.portada && borrarRutas.indexOf(libroEdit.portada) < 0) borrarRutas.push(libroEdit.portada);
+    libroEdit.portada = ruta; $('l-vista').src = d; estado.cambiosSinGuardar = true;
+  }).catch(function (e) { aviso('aviso-libro', 'error', e.message); });
+});
+$('btn-cancelar-libro').onclick = function () { estado.cambiosSinGuardar = false; borrarRutas = []; $('editor-libro').classList.add('oculto'); };
+$('btn-guardar-libro').onclick = function () {
+  var l = clonar(libroEdit);
+  l.titulo = $('l-titulo').value.trim(); l.categoria = $('l-categoria').value.trim() || 'Otras obras'; l.url = $('l-url').value.trim(); l.destacado = $('l-destacado').checked;
+  if (!l.titulo) { aviso('aviso-libro', 'error', 'Escriba el título del libro.'); return; }
+  if (l.url && !/^https?:\/\//.test(l.url)) { aviso('aviso-libro', 'error', 'El enlace debe empezar por https://'); return; }
+  if (!l.portada) { aviso('aviso-libro', 'error', 'Elija la imagen de portada.'); return; }
+  var cand = candidato();
+  var L = cand.libros; L.libros = L.libros || []; L.categorias = L.categorias || [];
+  if (L.categorias.indexOf(l.categoria) < 0) L.categorias.push(l.categoria);
+  if (l.id) { var i = L.libros.findIndex(function (x) { return x.id === l.id; }); if (i >= 0) L.libros[i] = l; else L.libros.push(l); }
+  else { l.id = 'l' + Date.now().toString(36); L.libros.unshift(l); }
+  if (l.destacado && L.libros.filter(function (x) { return x.destacado; }).length > 6) aviso('aviso-panel', 'info', 'Nota: hay más de 6 libros destacados; en la portada solo se muestran los 6 primeros.');
+  publicar(cand, 'Libro: ' + l.titulo, 'aviso-libro', function () { $('editor-libro').classList.add('oculto'); pintarLibros(); });
+};
+function eliminarLibro(l) {
+  if (!confirm('¿Quitar el libro «' + l.titulo + '» de su web?')) return;
+  var cand = candidato();
+  cand.libros.libros = cand.libros.libros.filter(function (x) { return x.id !== l.id; });
+  borrarRutas = l.portada ? [l.portada] : [];
+  publicar(cand, 'Libro eliminado: ' + l.titulo, 'aviso-panel', pintarLibros).then(function (ok) { if (!ok) borrarRutas = []; });
+}
+
+/* ---------- Perfil ---------- */
+function pintarPerfil() {
+  var s = estado.sitio, c = s.contacto || {};
+  $('s-nombre').value = s.nombre || ''; $('s-titulo').value = s.titulo || ''; $('s-frase').value = s.frase || '';
+  $('s-sobre').value = s.sobreMi || ''; $('s-temas').value = (s.temas || []).join('\n');
+  $('s-foto-vista').src = srcImagen(pendientesPerfil.foto || s.foto || ''); $('s-portada-vista').src = srcImagen(pendientesPerfil.fotoPortada || s.fotoPortada || '');
+  $('c-texto').value = c.texto || ''; $('c-correo').value = c.correo || ''; $('c-whatsapp').value = c.whatsapp || ''; $('c-instagram').value = c.instagram || '';
+  var cif = $('s-cifras'); cif.innerHTML = '';
+  var lista = (s.cifras || []).slice(); while (lista.length < 3) lista.push({ valor: '', texto: '' });
+  lista.slice(0, 3).forEach(function (x) {
+    var d = document.createElement('div'); d.className = 'cifra-fila';
+    d.innerHTML = '<input type="text" placeholder="Número o dato" data-c="valor"><input type="text" placeholder="Descripción" data-c="texto">';
+    d.querySelector('[data-c=valor]').value = x.valor; d.querySelector('[data-c=texto]').value = x.texto; cif.appendChild(d);
+  });
+  var pr = $('s-proyectos'); pr.innerHTML = '';
+  (s.investigacion || []).forEach(agregarFilaProyecto);
+  $('s-cargo').value = (s.cargo || {}).texto || ''; $('s-cargo-url').value = (s.cargo || {}).url || ''; $('s-cvlac').value = s.cvlac || '';
+}
+function agregarFilaProyecto(p) {
+  p = p || { nombre: '', texto: '', url: '' };
+  var d = document.createElement('div'); d.className = 'proyecto-fila';
+  d.innerHTML = '<input type="text" placeholder="Nombre" data-p="nombre"><input type="text" placeholder="Línea de investigación" data-p="texto"><input type="url" placeholder="Enlace GrupLAC https://…" data-p="url">';
+  d.querySelector('[data-p=nombre]').value = p.nombre; d.querySelector('[data-p=texto]').value = p.texto; d.querySelector('[data-p=url]').value = p.url;
+  d.appendChild(boton('Quitar', 'b-peligro b-chico', function () { d.remove(); estado.cambiosSinGuardar = true; }));
+  $('s-proyectos').appendChild(d);
+}
+$('btn-mas-proyecto').onclick = function () { agregarFilaProyecto(); estado.cambiosSinGuardar = true; };
+document.querySelector('[data-panel=perfil]').addEventListener('input', function () { estado.cambiosSinGuardar = true; });
+function fotoPerfil(input, campo, vista, max) {
+  $(input).addEventListener('change', function () {
+    var a = this.files && this.files[0]; this.value = ''; if (!a) return;
+    reducirImagen(a, max, 0.85).then(function (d) {
+      var ruta = '/assets/img/' + nombreUnico(campo === 'foto' ? 'perfil' : 'portada');
+      if (estado.sitio[campo] && borrarRutas.indexOf(estado.sitio[campo]) < 0) borrarRutas.push(estado.sitio[campo]);
+      nuevasImagenes[ruta] = d; pendientesPerfil[campo] = ruta; $(vista).src = d; estado.cambiosSinGuardar = true;
+    }).catch(function (e) { aviso('aviso-perfil', 'error', e.message); });
+  });
+}
+fotoPerfil('s-foto', 'foto', 's-foto-vista', 1000);
+fotoPerfil('s-portada', 'fotoPortada', 's-portada-vista', 1200);
+$('btn-guardar-perfil').onclick = function () {
+  var cand = candidato(); var s = cand.sitio;
+  if (pendientesPerfil.foto) s.foto = pendientesPerfil.foto;
+  if (pendientesPerfil.fotoPortada) s.fotoPortada = pendientesPerfil.fotoPortada;
+  s.nombre = $('s-nombre').value.trim(); s.titulo = $('s-titulo').value.trim(); s.frase = $('s-frase').value.trim();
+  s.sobreMi = $('s-sobre').value.trim(); s.temas = $('s-temas').value.split('\n').map(function (x) { return x.trim(); }).filter(Boolean);
+  s.cifras = Array.prototype.map.call(document.querySelectorAll('.cifra-fila'), function (d) { return { valor: d.querySelector('[data-c=valor]').value.trim(), texto: d.querySelector('[data-c=texto]').value.trim() }; }).filter(function (x) { return x.valor; });
+  s.contacto = { texto: $('c-texto').value.trim(), correo: $('c-correo').value.trim(), whatsapp: $('c-whatsapp').value.replace(/\D/g, ''), instagram: $('c-instagram').value.trim() };
+  s.cargo = { texto: $('s-cargo').value.trim(), url: $('s-cargo-url').value.trim() };
+  s.cvlac = $('s-cvlac').value.trim();
+  s.investigacion = Array.prototype.map.call(document.querySelectorAll('.proyecto-fila'), function (d) { return { nombre: d.querySelector('[data-p=nombre]').value.trim(), texto: d.querySelector('[data-p=texto]').value.trim(), url: d.querySelector('[data-p=url]').value.trim() }; }).filter(function (x) { return x.nombre; });
+  if (!s.nombre) { aviso('aviso-perfil', 'error', 'Escriba su nombre.'); return; }
+  if (s.contacto.correo && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.contacto.correo)) { aviso('aviso-perfil', 'error', 'Revise el correo.'); return; }
+  var malUrl = s.investigacion.concat([{ url: s.contacto.instagram }, { url: s.cargo.url }, { url: s.cvlac }]).filter(function (p) { return p.url && !/^https?:\/\//.test(p.url); });
+  if (malUrl.length) { aviso('aviso-perfil', 'error', 'Las direcciones web deben empezar por https://'); return; }
+  publicar(cand, 'Actualización de «Sobre mí» y contacto', 'aviso-perfil', pintarPerfil);
+};
+</script>
+</body>
+</html>
