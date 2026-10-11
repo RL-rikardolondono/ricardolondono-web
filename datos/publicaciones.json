@@ -1,6 +1,17 @@
 {
  "publicaciones": [
   {
+   "slug": "libros-disponibles-en-linea",
+   "titulo": "Libros Disponibles en Línea",
+   "fecha": "2026-10-11T12:00:00",
+   "etiquetaFecha": "",
+   "categoria": "Libros",
+   "portada": "/assets/img/publicaciones/publicacion-mv487xdowxh.jpg",
+   "fotos": [],
+   "contenido": "Escanee el QR y pida sus libros en línea, desde la editorial hasta la puerta de su casa",
+   "video": ""
+  },
+  {
    "slug": "iii-congreso-nacionalde-actualizacion-medica-conferencia-impresion-diagnostica-diferencial-entre-autismo-y-tdah",
    "titulo": "III Congreso Nacional de Actualización Médica: conferencia «Impresión diagnóstica diferencial entre autismo y TDAH»",
    "fecha": "2024-10-03T03:08:22",
