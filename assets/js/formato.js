@@ -119,7 +119,7 @@
       '<div><h3>' + esc(sitio.nombre) + '</h3><p>' + esc(sitio.titulo) + '. ' + esc(sitio.frase || '') + '</p></div>' +
       '<div><h3>Secciones</h3><ul>' + MENU.slice(1).map(function (m) { return '<li><a href="' + m[1] + '">' + m[2] + '</a></li>'; }).join('') + '</ul></div>' +
       '<div><h3>Contacto</h3><ul>' + redes.join('') + '<li><a href="https://www.autoreseditores.com/rikardolondono" target="_blank" rel="noopener">Libros en Autores Editores</a></li></ul></div>' +
-      '</div><div class="pie__base"><span>© ' + anio + ' ' + esc(sitio.nombre) + '</span>' +
+      '</div><div class="pie__base"><span>© ' + anio + ' ' + esc(sitio.nombre) + ' · <a href="/admin/" rel="nofollow" class="pie__ingresar">Ingresar (equipo)</a></span>' +
       '<span>Sitio desarrollado por <a href="https://skynetgenesis.com" target="_blank" rel="noopener">SkyNet Genesis</a></span></div></div></footer>';
   }
 
