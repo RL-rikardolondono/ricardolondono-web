@@ -92,26 +92,45 @@ textarea{min-height:240px;resize:vertical;line-height:1.6}
 <main>
   <!-- INGRESO -->
   <section id="vista-ingreso" class="ingreso">
-    <div class="caja">
+    <div class="caja" id="caja-entrar">
       <h1>Entrar al panel</h1>
-      <p>Pegue aquí la <b>contraseña del panel</b>. Esta contraseña solo sirve para esta web y queda guardada únicamente en este equipo.</p>
-      <label for="llave">Contraseña del panel</label>
-      <input type="password" id="llave" autocomplete="off" placeholder="github_pat_…">
+      <p>Entre con su correo y su contraseña del panel.</p>
+      <label for="ing-correo">Correo</label>
+      <input type="email" id="ing-correo" autocomplete="username">
+      <label for="ing-clave">Contraseña</label>
+      <input type="password" id="ing-clave" autocomplete="current-password">
       <label class="chk"><input type="checkbox" id="recordar" checked> Recordar en este equipo (no lo marque en computadores ajenos)</label>
       <div id="aviso-ingreso"></div>
       <div class="pie-acciones"><button class="boton b-principal b-grande" id="btn-entrar" type="button">Entrar</button></div>
+      <p class="ayuda" style="margin-top:14px"><a href="#" id="btn-olvido">¿Olvidó su contraseña?</a> · <a href="#" id="btn-primera">¿Primera vez? Crear mi contraseña</a></p>
     </div>
-    <details class="caja">
-      <summary><b>¿No tiene la contraseña? Cómo crearla (una sola vez)</b></summary>
+
+    <div class="caja oculto" id="caja-nueva">
+      <h1>Crear nueva contraseña</h1>
+      <p>Escriba su nueva contraseña del panel (mínimo 8 caracteres).</p>
+      <label for="nueva-clave">Nueva contraseña</label>
+      <input type="password" id="nueva-clave" autocomplete="new-password">
+      <label for="nueva-clave2">Repita la contraseña</label>
+      <input type="password" id="nueva-clave2" autocomplete="new-password">
+      <div id="aviso-nueva"></div>
+      <div class="pie-acciones"><button class="boton b-principal b-grande" id="btn-clave-nueva" type="button">Guardar y entrar</button></div>
+    </div>
+
+    <div class="caja oculto" id="caja-llave">
+      <h1>Configuración inicial (solo una vez)</h1>
+      <p>Para que el panel pueda publicar en su web, GitHub necesita una llave de acceso. Se pega <b>una sola vez</b>: queda guardada de forma segura en el servidor y no tendrá que volver a verla.</p>
       <ol class="pasos">
-        <li>Inicie sesión en GitHub y abra <a id="enlace-token" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">esta página para crear la contraseña</a>.</li>
-        <li>En <b>Token name</b> escriba: <i id="nombre-llave">Panel ricardolondono.com</i>. En <b>Expiration</b> elija <b>No expiration</b> (o la fecha que prefiera).</li>
-        <li>En <b>Repository access</b> elija <b>Only select repositories</b> y marque solo el repositorio <b id="nombre-repo">ricardolondono-web</b>.</li>
-        <li>En <b>Permissions → Repository permissions</b>, busque <b>Contents</b> y cámbielo a <b>Read and write</b>. No active nada más.</li>
-        <li>Pulse <b>Generate token</b>, copie la contraseña (empieza por <code>github_pat_</code>) y péguela arriba.</li>
+        <li>Inicie sesión en GitHub y abra <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">esta página</a>.</li>
+        <li>En <b>Token name</b> escriba: <i id="nombre-llave">Panel ricardolondono.com</i>. En <b>Expiration</b> elija <b>No expiration</b>.</li>
+        <li>En <b>Repository access</b> elija <b>Only select repositories</b> y marque solo <b id="nombre-repo">ricardolondono-web</b>.</li>
+        <li>En <b>Permissions → Repository permissions</b>, ponga <b>Contents</b> en <b>Read and write</b>. Nada más.</li>
+        <li>Pulse <b>Generate token</b>, copie la llave (empieza por <code>github_pat_</code>) y péguela aquí abajo.</li>
       </ol>
-      <p class="ayuda">Guarde la contraseña en un lugar seguro. Si la pierde o cree que alguien la vio, bórrela en GitHub y cree otra igual.</p>
-    </details>
+      <label for="llave">Llave de GitHub</label>
+      <input type="password" id="llave" autocomplete="off" placeholder="github_pat_…">
+      <div id="aviso-llave"></div>
+      <div class="pie-acciones"><button class="boton b-principal b-grande" id="btn-llave" type="button">Guardar y entrar</button></div>
+    </div>
   </section>
 
   <!-- PANEL -->
@@ -262,7 +281,10 @@ var CONFIG = {
   repo: 'ricardolondono-web',         // repositorio de la web
   rama: 'main',
   sitio: 'ricardolondono.com',
-  claveLocal: 'panel-ricardolondono-llave'
+  sitioId: 'ricardolondono',                                   // nombre de esta web en el servicio de ingreso
+  correo: 'contacto@ricardolondono.com',                       // correo que entra al panel
+  ingreso: 'https://skynetgenesis.com/ingreso/api.php',        // servicio central de ingreso de SkyNet Genesis
+  claveLocal: 'panel-ricardolondono-sesion'
 };
 /* ======================================================================================= */
 
@@ -299,9 +321,9 @@ function gh(ruta, op) {
 }
 function errorGH(st, msg) {
   var e = new Error(msg); e.status = st;
-  if (st === 401) e.message = 'La contraseña no es válida o ya venció. Cree una nueva en GitHub y vuelva a entrar.';
-  else if (st === 403) e.message = 'La contraseña no tiene permiso para escribir en esta web. Revise que tenga «Contents: Read and write» sobre el repositorio ' + CONFIG.repo + '.';
-  else if (st === 404) e.message = 'No se encontró el repositorio ' + CONFIG.repo + ' con esta contraseña. Revise que la contraseña tenga acceso a ese repositorio.';
+  if (st === 401) e.message = 'La llave de GitHub no es válida o ya venció.';
+  else if (st === 403) e.message = 'La llave de GitHub no tiene permiso para escribir en esta web. Revise que tenga «Contents: Read and write» sobre el repositorio ' + CONFIG.repo + '.';
+  else if (st === 404) e.message = 'No se encontró el repositorio ' + CONFIG.repo + ' con esta llave de GitHub.';
   else if (!st) e.message = 'No hay conexión a internet. Intente de nuevo.';
   return e;
 }
@@ -375,10 +397,22 @@ function usada(ruta, d) {
   return s.indexOf('"' + ruta + '"') >= 0;
 }
 
-/* ---------- Ingreso ---------- */
-function entrar(llave, recordar) {
-  estado.llave = llave.trim();
-  if (!/^(github_pat_|ghp_)/.test(estado.llave)) { aviso('aviso-ingreso', 'error', 'Eso no parece una contraseña del panel. Debe empezar por «github_pat_».'); return; }
+/* ---------- Ingreso (correo y contraseña por el servicio central) ---------- */
+function api(accion, datos) {
+  datos = datos || {}; datos.sitio = CONFIG.sitioId; datos.accion = accion;
+  return fetch(CONFIG.ingreso + '?sitio=' + encodeURIComponent(CONFIG.sitioId), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos), cache: 'no-store' })
+    .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok || !j.ok) { var e = new Error(j.error || 'No se pudo conectar con el servicio de ingreso. Intente de nuevo.'); e.status = r.status; throw e; } return j; }); },
+          function () { var e = new Error('No hay conexión a internet. Intente de nuevo.'); throw e; });
+}
+function verCaja(id) { ['caja-entrar', 'caja-nueva', 'caja-llave'].forEach(function (c) { $(c).classList.toggle('oculto', c !== id); }); $('vista-ingreso').classList.remove('oculto'); }
+function guardarSesion(s, recordar) { borrarLS(CONFIG.claveLocal); guardarLS(CONFIG.claveLocal, s, recordar); }
+function trasIngreso(r) {
+  // r = respuesta del servicio: { sesion, llave, configurado }
+  if (!r.configurado || !r.llave) { cargando(false); verCaja('caja-llave'); return; }
+  cargarPanel(r.llave);
+}
+function cargarPanel(llave) {
+  estado.llave = llave;
   cargando(true, 'Entrando…');
   gh('').then(function (repo) {
     if (repo.permissions && !repo.permissions.push) throw errorGH(403);
@@ -386,24 +420,78 @@ function entrar(llave, recordar) {
   }).then(function (r) {
     estado.commitBase = r[0];
     estado.sitio = JSON.parse(r[1]); estado.pubs = JSON.parse(r[2]).publicaciones || []; estado.libros = JSON.parse(r[3]);
-    guardarLS(CONFIG.claveLocal, estado.llave, recordar);
     $('vista-ingreso').classList.add('oculto'); $('vista-panel').classList.remove('oculto'); $('acciones-barra').classList.remove('oculto');
     cargando(false); pintarPubs(); pintarLibros(); pintarPerfil();
   }).catch(function (e) {
     cargando(false); estado.llave = '';
-    if (e.status === 401) borrarLS(CONFIG.claveLocal);
-    $('vista-ingreso').classList.remove('oculto');
-    aviso('aviso-ingreso', 'error', e.message);
+    if (e.status === 401 || e.status === 403 || e.status === 404) { verCaja('caja-llave'); aviso('aviso-llave', 'error', 'La llave de GitHub guardada ya no funciona (' + e.message + ') Cree una nueva y péguela aquí.'); return; }
+    verCaja('caja-entrar'); aviso('aviso-ingreso', 'error', e.message);
   });
 }
-$('btn-entrar').onclick = function () { entrar($('llave').value, $('recordar').checked); };
-$('llave').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('btn-entrar').click(); });
+$('ing-correo').value = CONFIG.correo;
+$('btn-entrar').onclick = function () {
+  var correo = $('ing-correo').value.trim(), clave = $('ing-clave').value, recordar = $('recordar').checked;
+  if (!correo || !clave) { aviso('aviso-ingreso', 'error', 'Escriba su correo y su contraseña.'); return; }
+  cargando(true, 'Entrando…'); aviso('aviso-ingreso', '', '');
+  api('entrar', { correo: correo, clave: clave, recordar: recordar }).then(function (r) {
+    $('ing-clave').value = ''; guardarSesion(r.sesion, recordar); trasIngreso(r);
+  }).catch(function (e) { cargando(false); aviso('aviso-ingreso', 'error', e.message); });
+};
+$('ing-clave').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('btn-entrar').click(); });
+function pedirEnlace(ev) {
+  ev.preventDefault();
+  var correo = $('ing-correo').value.trim();
+  if (!correo) { aviso('aviso-ingreso', 'error', 'Escriba primero su correo.'); return; }
+  cargando(true, 'Enviando el correo…');
+  api('solicitar', { correo: correo }).then(function () {
+    cargando(false);
+    aviso('aviso-ingreso', 'ok', 'Listo. Si ese correo tiene acceso al panel, le llegará en unos minutos un mensaje con un enlace para crear su contraseña. Revise también la carpeta de spam. El enlace vence en 1 hora.');
+  }).catch(function (e) { cargando(false); aviso('aviso-ingreso', 'error', e.message); });
+}
+$('btn-olvido').onclick = pedirEnlace;
+$('btn-primera').onclick = pedirEnlace;
+$('btn-clave-nueva').onclick = function () {
+  var c1 = $('nueva-clave').value, c2 = $('nueva-clave2').value;
+  if (c1.length < 8) { aviso('aviso-nueva', 'error', 'La contraseña debe tener al menos 8 caracteres.'); return; }
+  if (c1 !== c2) { aviso('aviso-nueva', 'error', 'Las dos contraseñas no coinciden.'); return; }
+  var codigo = (location.hash.match(/clave=([a-f0-9]+)/) || [])[1] || '';
+  cargando(true, 'Guardando…');
+  api('fijar', { codigo: codigo, clave: c1, recordar: true }).then(function (r) {
+    history.replaceState(null, '', location.pathname);
+    $('nueva-clave').value = $('nueva-clave2').value = '';
+    guardarSesion(r.sesion, true); trasIngreso(r);
+  }).catch(function (e) { cargando(false); aviso('aviso-nueva', 'error', e.message); });
+};
+$('btn-llave').onclick = function () {
+  var llave = $('llave').value.trim();
+  if (!/^(github_pat_|ghp_)/.test(llave)) { aviso('aviso-llave', 'error', 'Eso no parece una llave de GitHub. Debe empezar por «github_pat_».'); return; }
+  cargando(true, 'Comprobando la llave…');
+  api('guardar_llave', { sesion: leerLS(CONFIG.claveLocal), llave: llave }).then(function (r) {
+    $('llave').value = ''; cargarPanel(r.llave);
+  }).catch(function (e) {
+    cargando(false);
+    if (e.status === 401) { borrarLS(CONFIG.claveLocal); verCaja('caja-entrar'); aviso('aviso-ingreso', 'error', e.message); return; }
+    aviso('aviso-llave', 'error', e.message);
+  });
+};
 $('btn-salir').onclick = function () {
   if (estado.cambiosSinGuardar && !confirm('Tiene cambios sin publicar. ¿Salir de todos modos?')) return;
-  borrarLS(CONFIG.claveLocal); estado.cambiosSinGuardar = false; location.reload();
+  var s = leerLS(CONFIG.claveLocal); borrarLS(CONFIG.claveLocal); estado.cambiosSinGuardar = false;
+  (s ? api('salir', { sesion: s }).catch(function () {}) : Promise.resolve()).then(function () { location.reload(); });
 };
 window.addEventListener('beforeunload', function (e) { if (estado.cambiosSinGuardar) { e.preventDefault(); e.returnValue = ''; } });
-(function () { var g = leerLS(CONFIG.claveLocal); if (g) entrar(g, true); })();
+(function () {
+  window.addEventListener('hashchange', function () { if (/clave=[a-f0-9]+/.test(location.hash)) { $('vista-panel').classList.add('oculto'); $('acciones-barra').classList.add('oculto'); verCaja('caja-nueva'); } });
+  borrarLS('panel-ricardolondono-llave'); // limpia la llave vieja que antes se guardaba en el equipo
+  if (/clave=[a-f0-9]+/.test(location.hash)) { verCaja('caja-nueva'); return; }
+  var s = leerLS(CONFIG.claveLocal);
+  if (!s) { verCaja('caja-entrar'); return; }
+  cargando(true, 'Entrando…');
+  api('sesion', { sesion: s }).then(trasIngreso).catch(function (e) {
+    cargando(false); if (e.status === 401) borrarLS(CONFIG.claveLocal);
+    verCaja('caja-entrar'); if (e.status !== 401) aviso('aviso-ingreso', 'error', e.message);
+  });
+})();
 
 /* ---------- Pestañas ---------- */
 function verPanel(nombre) {
