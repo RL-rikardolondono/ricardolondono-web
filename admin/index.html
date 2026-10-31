@@ -209,8 +209,9 @@ textarea{min-height:240px;resize:vertical;line-height:1.6}
         <label for="l-titulo">Título</label><input type="text" id="l-titulo" maxlength="160">
         <div class="fila">
           <div><label for="l-categoria">Categoría</label><input type="text" id="l-categoria" list="categorias-libro"><datalist id="categorias-libro"></datalist></div>
-          <div><label for="l-url">Enlace a la tienda</label><input type="url" id="l-url" placeholder="https://www.autoreseditores.com/libro/…"></div>
+          <div><label for="l-url">Enlace en Autores Editores</label><input type="url" id="l-url" placeholder="https://www.autoreseditores.com/libro/…"></div>
         </div>
+        <label for="l-amazon">Enlace en Amazon <span class="ayuda">(opcional)</span></label><input type="url" id="l-amazon" placeholder="https://www.amazon.com/dp/…">
         <label>Portada</label>
         <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
           <img id="l-vista" alt="" style="width:90px;height:135px;object-fit:cover;border-radius:6px;background:var(--azul-claro)">
@@ -743,7 +744,7 @@ $('btn-nuevo-libro').onclick = function () { abrirLibro(null); };
 function abrirLibro(l) {
   libroEdit = l ? clonar(l) : { id: '', titulo: '', categoria: (estado.libros.categorias || [])[0] || '', url: '', portada: '', destacado: false };
   $('titulo-editor-libro').textContent = l ? 'Editar libro' : 'Nuevo libro';
-  $('l-titulo').value = libroEdit.titulo; $('l-categoria').value = libroEdit.categoria; $('l-url').value = libroEdit.url;
+  $('l-titulo').value = libroEdit.titulo; $('l-categoria').value = libroEdit.categoria; $('l-url').value = libroEdit.url; $('l-amazon').value = libroEdit.amazon || '';
   $('l-destacado').checked = !!libroEdit.destacado; if (libroEdit.portada) $('l-vista').src = srcImagen(libroEdit.portada); else $('l-vista').removeAttribute('src');
   aviso('aviso-libro', '', ''); $('editor-libro').classList.remove('oculto'); $('editor-libro').scrollIntoView({ behavior: 'smooth' });
 }
@@ -759,9 +760,9 @@ $('l-portada').addEventListener('change', function () {
 $('btn-cancelar-libro').onclick = function () { estado.cambiosSinGuardar = false; borrarRutas = []; $('editor-libro').classList.add('oculto'); };
 $('btn-guardar-libro').onclick = function () {
   var l = clonar(libroEdit);
-  l.titulo = $('l-titulo').value.trim(); l.categoria = $('l-categoria').value.trim() || 'Otras obras'; l.url = $('l-url').value.trim(); l.destacado = $('l-destacado').checked;
+  l.titulo = $('l-titulo').value.trim(); l.categoria = $('l-categoria').value.trim() || 'Otras obras'; l.url = $('l-url').value.trim(); l.amazon = $('l-amazon').value.trim(); if (!l.amazon) delete l.amazon; l.destacado = $('l-destacado').checked;
   if (!l.titulo) { aviso('aviso-libro', 'error', 'Escriba el título del libro.'); return; }
-  if (l.url && !/^https?:\/\//.test(l.url)) { aviso('aviso-libro', 'error', 'El enlace debe empezar por https://'); return; }
+  if ((l.url && !/^https?:\/\//.test(l.url)) || (l.amazon && !/^https?:\/\//.test(l.amazon))) { aviso('aviso-libro', 'error', 'El enlace debe empezar por https://'); return; }
   if (!l.portada) { aviso('aviso-libro', 'error', 'Elija la imagen de portada.'); return; }
   var cand = candidato();
   var L = cand.libros; L.libros = L.libros || []; L.categorias = L.categorias || [];

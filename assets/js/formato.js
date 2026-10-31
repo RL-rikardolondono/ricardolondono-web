@@ -78,7 +78,7 @@
     return pubs.slice().sort(function (a, b) { return String(b.fecha).localeCompare(String(a.fecha)); });
   }
 
-  var VERSION = '3';
+  var VERSION = '4';
 
   // ---------- Armazón común de todas las páginas ----------
   var MENU = [
@@ -203,10 +203,16 @@
       '</div></a>';
   }
 
+  // Libro: {titulo, categoria, url (Autores Editores u otra tienda), amazon (opcional), portada, destacado}
   function libroHtml(l) {
-    return '<a class="libro" href="' + esc(l.url || '#') + '" target="_blank" rel="noopener">' +
+    var principal = l.url || l.amazon || '#';
+    var tiendas = [];
+    if (l.url) tiendas.push('<a class="libro__tienda" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + (/autoreseditores/i.test(l.url) ? 'Autores Editores' : 'Ver en la tienda') + '</a>');
+    if (l.amazon) tiendas.push('<a class="libro__tienda libro__tienda--amazon" href="' + esc(l.amazon) + '" target="_blank" rel="noopener">Amazon</a>');
+    return '<div class="libro"><a class="libro__enlace" href="' + esc(principal) + '" target="_blank" rel="noopener">' +
       '<div class="libro__tapa"><img src="' + esc(l.portada) + '" alt="Portada de ' + esc(l.titulo) + '" loading="lazy"></div>' +
-      '<span class="libro__titulo">' + esc(l.titulo) + '</span><span class="libro__ver">Ver en la tienda →</span></a>';
+      '<span class="libro__titulo">' + esc(l.titulo) + '</span></a>' +
+      (tiendas.length ? '<div class="libro__tiendas">' + tiendas.join('') + '</div>' : '') + '</div>';
   }
 
   // Artículo científico publicado en una revista: {titulo, fuente, url, pdf}
@@ -326,7 +332,7 @@
       '<a class="boton boton--borde" href="/publicaciones/">Ver todas</a></div>' +
       (ultimas.length ? '<div class="rejilla">' + ultimas.map(tarjeta).join('') + '</div>' : '<p class="vacio">Pronto habrá publicaciones.</p>')]);
     bloques.push(['', '<div class="seccion__cabeza"><div><span class="antetitulo">Libros</span><h2>Obras destacadas</h2>' +
-      '<p>' + (libros.libros || []).length + ' títulos publicados en Autores Editores.</p></div>' +
+      '<p>' + (libros.libros || []).length + ' títulos publicados en Autores Editores' + (libros.tiendaAmazon ? ' y Amazon' : '') + '.</p></div>' +
       '<a class="boton boton--borde" href="/libros/">Ver todos los libros</a></div>' +
       '<div class="libros">' + dest.map(libroHtml).join('') + '</div>']);
     var fotos = fotosEventos(pubs).slice(0, 8);
@@ -368,8 +374,9 @@
     }).join('');
     var cuerpo = '<section class="seccion"><div class="contenedor">' +
       '<div class="seccion__cabeza"><div><span class="antetitulo">Libros</span><h1>Obra publicada</h1>' +
-      '<p>' + todos.length + ' títulos disponibles en Autores Editores, en versión impresa y digital.</p></div>' +
-      '<a class="boton boton--accion" href="' + esc(libros.tienda || 'https://www.autoreseditores.com/rikardolondono') + '" target="_blank" rel="noopener">Ir a la tienda del autor</a></div>' +
+      '<p>' + todos.length + ' títulos en versión impresa y digital, disponibles en Autores Editores' + (libros.tiendaAmazon ? ' y en Amazon' : '') + '.</p></div>' +
+      '<div class="botones-tienda"><a class="boton boton--accion" href="' + esc(libros.tienda || 'https://www.autoreseditores.com/rikardolondono') + '" target="_blank" rel="noopener">Tienda en Autores Editores</a>' +
+      (libros.tiendaAmazon ? '<a class="boton boton--borde" href="' + esc(libros.tiendaAmazon) + '" target="_blank" rel="noopener">Página de autor en Amazon</a>' : '') + '</div></div>' +
       grupos + '</div></section>';
     return documento(sitio, { ruta: '/libros/', activo: 'libros', titulo: 'Libros', descripcion: 'Libros de ' + sitio.nombre + ': autismo, TDAH, neurodesarrollo, medicina, veterinaria y teología.', cuerpo: cuerpo, anio: anio });
   }

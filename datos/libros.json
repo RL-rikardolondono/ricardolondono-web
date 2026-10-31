@@ -5,6 +5,7 @@
   "Medicina veterinaria",
   "Psicología, relaciones y liderazgo",
   "Teología e historia del cristianismo",
+  "Traducciones: Clásicos de la Fe",
   "Otras obras"
  ],
  "tienda": "https://www.autoreseditores.com/rikardolondono",
@@ -199,7 +200,8 @@
    "categoria": "Teología e historia del cristianismo",
    "url": "https://www.autoreseditores.com/libro/26909/ricardo-londono-gonzalez/tratado-de-sociologia-cristiana-fundamental.html",
    "portada": "/assets/img/libros/26909.jpg",
-   "destacado": false
+   "destacado": false,
+   "amazon": "https://www.amazon.com/dp/B0HP7C7T2M"
   },
   {
    "id": "22759",
@@ -207,7 +209,8 @@
    "categoria": "Teología e historia del cristianismo",
    "url": "https://www.autoreseditores.com/libro/22759/carlos-ricardo-londono-gonzalez/principios-de-filologia-biblica.html",
    "portada": "/assets/img/libros/22759.jpg",
-   "destacado": false
+   "destacado": false,
+   "amazon": "https://www.amazon.com/dp/B0BYTQ1C5L"
   },
   {
    "id": "21629",
@@ -215,7 +218,8 @@
    "categoria": "Teología e historia del cristianismo",
    "url": "https://www.autoreseditores.com/libro/21629/ricardo-londono-gonzalez/costumbres-judaizantes-en-el-cristianismo.html",
    "portada": "/assets/img/libros/21629.jpg",
-   "destacado": false
+   "destacado": false,
+   "amazon": "https://www.amazon.com/dp/B0BYW6Q2PH"
   },
   {
    "id": "21590",
@@ -223,7 +227,8 @@
    "categoria": "Teología e historia del cristianismo",
    "url": "https://www.autoreseditores.com/libro/21590/ricardo-londono-gonzalez/la-confesion-de-la-rochelle-1559.html",
    "portada": "/assets/img/libros/21590.jpg",
-   "destacado": false
+   "destacado": false,
+   "amazon": "https://www.amazon.com/dp/B0BYW5WXRR"
   },
   {
    "id": "32319",
@@ -247,7 +252,52 @@
    "categoria": "Otras obras",
    "url": "https://www.autoreseditores.com/libro/23889/ricardo-londono-gonzalez/tras-las-sombras-del-imperio.html",
    "portada": "/assets/img/libros/23889.jpg",
+   "destacado": false,
+   "amazon": "https://www.amazon.com/dp/B0CCBJQYXJ"
+  },
+  {
+   "id": "36114",
+   "titulo": "El poder de la oración (E. M. Bounds) — traducción, introducción y notas",
+   "categoria": "Traducciones: Clásicos de la Fe",
+   "url": "https://www.autoreseditores.com/libro/36114/e-m-bounds/el-poder-de-la-oracion.html",
+   "portada": "/assets/img/libros/36114.jpg",
+   "destacado": false,
+   "amazon": "https://www.amazon.com/dp/B0HP3RJXRB"
+  },
+  {
+   "id": "36116",
+   "titulo": "Todo por gracia (C. H. Spurgeon) — traducción, introducción y notas",
+   "categoria": "Traducciones: Clásicos de la Fe",
+   "url": "https://www.autoreseditores.com/libro/36116/c-h-spurgeon/todo-por-gracia.html",
+   "portada": "/assets/img/libros/36116.jpg",
+   "destacado": false,
+   "amazon": "https://www.amazon.com/dp/B0HP79LQR3"
+  },
+  {
+   "id": "36115",
+   "titulo": "La práctica de la presencia de Dios (Hermano Lorenzo) — traducción, introducción y notas",
+   "categoria": "Traducciones: Clásicos de la Fe",
+   "url": "https://www.autoreseditores.com/libro/36115/hermano-lorenzo/la-practica-de-la-presencia-de-dios.html",
+   "portada": "/assets/img/libros/36115.jpg",
+   "destacado": false,
+   "amazon": "https://www.amazon.com/dp/B0HP47LF5G"
+  },
+  {
+   "id": "36239",
+   "titulo": "Esperando en Dios (Andrew Murray) — traducción, introducción y notas",
+   "categoria": "Traducciones: Clásicos de la Fe",
+   "url": "https://www.autoreseditores.com/libro/36239/andrew-murray/esperando-en-dios.html",
+   "portada": "/assets/img/libros/36239.jpg",
+   "destacado": false
+  },
+  {
+   "id": "36155",
+   "titulo": "O poder da oração (E. M. Bounds) — tradução, introdução e notas",
+   "categoria": "Traducciones: Clásicos de la Fe",
+   "url": "https://www.autoreseditores.com/libro/36155/e-m-bounds/o-poder-da-oracao.html",
+   "portada": "/assets/img/libros/36155.jpg",
    "destacado": false
   }
- ]
+ ],
+ "tiendaAmazon": "https://www.amazon.com/stores/author/B0BYW2FHHG/allbooks"
 }

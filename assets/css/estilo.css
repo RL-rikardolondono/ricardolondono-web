@@ -99,9 +99,16 @@ h3{font-size:1.35rem;font-weight:600}
 
 /* Libros */
 .libros{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:22px}
-.libro{text-decoration:none;color:var(--texto);display:flex;flex-direction:column;gap:10px}
+.libro{color:var(--texto);display:flex;flex-direction:column;gap:8px;min-width:0}
+.libro__enlace{text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:10px}
+.libro__tiendas{display:flex;flex-wrap:wrap;gap:6px}
+.libro__tienda{font-size:.78rem;font-weight:600;text-decoration:none;color:var(--verde-osc);background:var(--verde-claro,#E3F6F2);border-radius:999px;padding:4px 10px}
+.libro__tienda:hover{background:var(--verde-osc);color:#fff}
+.libro__tienda--amazon{color:var(--azul);background:var(--azul-claro)}
+.libro__tienda--amazon:hover{background:var(--azul);color:#fff}
+.botones-tienda{display:flex;flex-wrap:wrap;gap:10px}
 .libro__tapa{aspect-ratio:2/3;border-radius:8px;overflow:hidden;background:var(--azul-claro);box-shadow:0 6px 18px rgba(28,43,57,.16);transition:transform .15s}
-.libro:hover .libro__tapa{transform:translateY(-4px)}
+.libro__enlace:hover .libro__tapa{transform:translateY(-4px)}
 .libro__tapa img{width:100%;height:100%;object-fit:cover}
 .libro__titulo{font-weight:600;font-size:.95rem;line-height:1.3}
 .libro__ver{font-size:.82rem;color:var(--verde-osc);font-weight:600}
