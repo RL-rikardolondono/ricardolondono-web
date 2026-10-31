@@ -21,6 +21,41 @@
     });
   });
 
+  // Formulario «Solicitar una conferencia»
+  var form = document.getElementById('form-conferencia');
+  if (form) {
+    var abierto = Date.now();
+    var aviso = form.querySelector('.form-conf__aviso');
+    var enviar = form.querySelector('button[type=submit]');
+    function msg(tipo, t) { aviso.className = 'form-conf__aviso ' + tipo; aviso.textContent = t; }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var datos = {};
+      Array.prototype.forEach.call(form.elements, function (el) { if (el.name) datos[el.name] = String(el.value || '').trim(); });
+      var faltan = [];
+      ['nombre', 'institucion', 'correo', 'ciudad'].forEach(function (n) {
+        var el = form.elements[n], vacio = !datos[n] || (n === 'correo' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(datos[n]));
+        el.setAttribute('aria-invalid', vacio ? 'true' : 'false');
+        if (vacio) faltan.push(el);
+      });
+      if (faltan.length) { msg('error', 'Revise los campos marcados en rojo (nombre, institución, un correo válido y ciudad).'); faltan[0].focus(); return; }
+      datos.sitio = form.getAttribute('data-sitio');
+      datos.espera = Date.now() - abierto;
+      datos.pagina = location.href;
+      enviar.disabled = true; enviar.textContent = 'Enviando…'; msg('', '');
+      fetch(form.getAttribute('data-destino'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok || !j.ok) throw new Error(j.error || 'No se pudo enviar.'); return j; }); })
+        .then(function () {
+          form.reset(); abierto = Date.now();
+          msg('ok', '✔ Gracias. Recibimos su solicitud y le responderemos pronto a su correo.');
+        })
+        .catch(function (err) {
+          msg('error', (err && err.message ? err.message : 'No se pudo enviar.') + ' Si el problema sigue, escríbanos por correo.');
+        })
+        .then(function () { enviar.disabled = false; enviar.textContent = 'Enviar solicitud'; });
+    });
+  }
+
   // Visor de fotos
   var enlaces = Array.prototype.slice.call(document.querySelectorAll('.galeria__foto, .galeria__foto-portada'));
   if (!enlaces.length) return;

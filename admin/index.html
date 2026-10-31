@@ -72,6 +72,9 @@ textarea{min-height:240px;resize:vertical;line-height:1.6}
 .ingreso{max-width:520px;margin:40px auto}
 .proyecto-fila{display:grid;grid-template-columns:1fr 1.4fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
 @media(max-width:700px){.proyecto-fila{grid-template-columns:1fr}}
+.articulo-fila{display:grid;grid-template-columns:1.6fr 1.2fr 1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.testimonio-fila{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:start}
+@media(max-width:700px){.articulo-fila,.testimonio-fila{grid-template-columns:1fr}}
 .cifra-fila{display:grid;grid-template-columns:.6fr 1.4fr;gap:8px;margin-bottom:8px}
 .firma{text-align:center;color:var(--suave);font-size:.82rem;padding:20px 16px 30px}
 .firma svg{width:18px;height:18px;vertical-align:-4px}
@@ -264,6 +267,34 @@ textarea{min-height:240px;resize:vertical;line-height:1.6}
         <div id="s-proyectos"></div>
         <button class="boton b-borde b-chico" type="button" id="btn-mas-proyecto">+ Agregar grupo</button>
       </div>
+      <div class="caja">
+        <h2>Perfiles académicos y hoja de vida</h2>
+        <div class="ayuda" style="margin-bottom:10px">Pegue la dirección completa de cada perfil. Los que deje vacíos no se muestran. Aparecen como botones en «Sobre mí» y en el pie de página, y ayudan a que Google lo reconozca como investigador.</div>
+        <div class="fila">
+          <div><label for="pf-orcid">ORCID</label><input type="url" id="pf-orcid" placeholder="https://orcid.org/0000-…"></div>
+          <div><label for="pf-researchgate">ResearchGate</label><input type="url" id="pf-researchgate" placeholder="https://www.researchgate.net/profile/…"></div>
+        </div>
+        <div class="fila">
+          <div><label for="pf-scholar">Google Scholar</label><input type="url" id="pf-scholar" placeholder="https://scholar.google.com/citations?user=…"></div>
+          <div><label for="pf-linkedin">LinkedIn</label><input type="url" id="pf-linkedin" placeholder="https://www.linkedin.com/in/…"></div>
+        </div>
+        <label>Hoja de vida en PDF <span class="ayuda">(la descargan los organizadores de eventos)</span></label>
+        <div id="cv-estado" class="ayuda" style="margin-bottom:8px"></div>
+        <label class="subir" for="cv-archivo">Subir otra hoja de vida (PDF)</label><input type="file" id="cv-archivo" accept="application/pdf" class="oculto">
+        <button class="boton b-peligro b-chico" type="button" id="btn-quitar-cv" style="margin-left:8px">Quitar PDF</button>
+      </div>
+      <div class="caja">
+        <h2>Artículos científicos</h2>
+        <div class="ayuda" style="margin-bottom:10px">Artículos publicados en revistas. Escriba el título, la referencia (revista, volumen, número, año, páginas) y el enlace. Los artículos de divulgación se escriben en la pestaña «Publicaciones» con la categoría «Artículos».</div>
+        <div id="s-articulos"></div>
+        <button class="boton b-borde b-chico" type="button" id="btn-mas-articulo">+ Agregar artículo</button>
+      </div>
+      <div class="caja">
+        <h2>Testimonios</h2>
+        <div class="ayuda" style="margin-bottom:10px">Frases reales de instituciones o personas que lo han invitado (con su permiso). Si no hay ninguno, la sección no aparece.</div>
+        <div id="s-testimonios"></div>
+        <button class="boton b-borde b-chico" type="button" id="btn-mas-testimonio">+ Agregar testimonio</button>
+      </div>
       <div id="aviso-perfil"></div>
       <div class="pie-acciones"><button class="boton b-accion b-grande" type="button" id="btn-guardar-perfil">Publicar cambios</button></div>
     </div>
@@ -290,7 +321,7 @@ var CONFIG = {
 
 var F = window.Formato;
 var API = 'https://api.github.com/repos/' + CONFIG.dueno + '/' + CONFIG.repo;
-var RESERVADAS = ['admin', 'assets', 'datos', 'libros', 'publicaciones', 'skynet-politica-de-privacidad', '404', 'index', 'sitemap', 'robots', 'cname'];
+var RESERVADAS = ['admin', 'assets', 'datos', 'libros', 'publicaciones', 'articulos', 'galeria', 'skynet-politica-de-privacidad', '404', 'index', 'sitemap', 'robots', 'cname'];
 var estado = { llave: '', sitio: null, pubs: null, libros: null, commitBase: '', cambiosSinGuardar: false };
 var nuevasImagenes = {};   // ruta -> dataURL (pendientes de subir)
 var borrarRutas = [];      // rutas a borrar en el próximo guardado
@@ -765,7 +796,58 @@ function pintarPerfil() {
   var pr = $('s-proyectos'); pr.innerHTML = '';
   (s.investigacion || []).forEach(agregarFilaProyecto);
   $('s-cargo').value = (s.cargo || {}).texto || ''; $('s-cargo-url').value = (s.cargo || {}).url || ''; $('s-cvlac').value = s.cvlac || '';
+  var pf = s.perfiles || {};
+  ['orcid', 'researchgate', 'scholar', 'linkedin'].forEach(function (k) { $('pf-' + k).value = pf[k] || ''; });
+  pintarCv();
+  $('s-articulos').innerHTML = ''; (s.articulos || []).forEach(agregarFilaArticulo);
+  $('s-testimonios').innerHTML = ''; (s.testimonios || []).forEach(agregarFilaTestimonio);
 }
+function cvActual() { return pendientesPerfil.cvPdf !== undefined ? pendientesPerfil.cvPdf : (estado.sitio.cvPdf || ''); }
+function pintarCv() {
+  var cv = cvActual();
+  $('cv-estado').innerHTML = '';
+  if (cv) { var a = document.createElement('a'); a.href = srcImagen(cv); a.target = '_blank'; a.textContent = pendientesPerfil.cvPdf ? 'PDF nuevo listo para publicar (ver)' : 'Ver la hoja de vida publicada'; $('cv-estado').appendChild(a); }
+  else $('cv-estado').textContent = 'No hay hoja de vida publicada.';
+  $('btn-quitar-cv').classList.toggle('oculto', !cv);
+}
+$('cv-archivo').addEventListener('change', function () {
+  var a = this.files && this.files[0]; this.value = ''; if (!a) return;
+  if (!/pdf$/i.test(a.type) && !/\.pdf$/i.test(a.name)) { aviso('aviso-perfil', 'error', 'El archivo debe ser un PDF.'); return; }
+  if (a.size > 8 * 1024 * 1024) { aviso('aviso-perfil', 'error', 'El PDF pesa más de 8 MB. Use una versión más liviana.'); return; }
+  var lector = new FileReader();
+  lector.onload = function () {
+    var ruta = '/assets/cv/hoja-de-vida-' + Date.now().toString(36) + '.pdf';
+    var anterior = cvActual(); if (anterior && borrarRutas.indexOf(anterior) < 0 && !nuevasImagenes[anterior]) borrarRutas.push(anterior);
+    if (nuevasImagenes[anterior]) delete nuevasImagenes[anterior];
+    nuevasImagenes[ruta] = String(lector.result).replace(/^data:[^,]*,/, 'data:application/pdf;base64,');
+    pendientesPerfil.cvPdf = ruta; estado.cambiosSinGuardar = true; pintarCv();
+  };
+  lector.onerror = function () { aviso('aviso-perfil', 'error', 'No se pudo leer el PDF.'); };
+  lector.readAsDataURL(a);
+});
+$('btn-quitar-cv').onclick = function () {
+  var anterior = cvActual(); if (!anterior) return;
+  if (nuevasImagenes[anterior]) delete nuevasImagenes[anterior]; else if (borrarRutas.indexOf(anterior) < 0) borrarRutas.push(anterior);
+  pendientesPerfil.cvPdf = ''; estado.cambiosSinGuardar = true; pintarCv();
+};
+function agregarFilaArticulo(a) {
+  a = a || { titulo: '', fuente: '', url: '', pdf: '' };
+  var d = document.createElement('div'); d.className = 'articulo-fila';
+  d.innerHTML = '<input type="text" placeholder="Título del artículo" data-a="titulo"><input type="text" placeholder="Revista, Vol., Núm. (año), páginas" data-a="fuente"><input type="url" placeholder="Enlace al artículo https://…" data-a="url"><input type="url" placeholder="Enlace al PDF (opcional)" data-a="pdf">';
+  ['titulo', 'fuente', 'url', 'pdf'].forEach(function (k) { d.querySelector('[data-a=' + k + ']').value = a[k] || ''; });
+  d.appendChild(boton('Quitar', 'b-peligro b-chico', function () { d.remove(); estado.cambiosSinGuardar = true; }));
+  $('s-articulos').appendChild(d);
+}
+function agregarFilaTestimonio(t) {
+  t = t || { texto: '', autor: '', cargo: '' };
+  var d = document.createElement('div'); d.className = 'testimonio-fila';
+  d.innerHTML = '<textarea placeholder="Texto del testimonio" data-t="texto" style="min-height:70px"></textarea><input type="text" placeholder="Nombre de quien lo dice" data-t="autor"><input type="text" placeholder="Cargo e institución" data-t="cargo">';
+  ['texto', 'autor', 'cargo'].forEach(function (k) { d.querySelector('[data-t=' + k + ']').value = t[k] || ''; });
+  d.appendChild(boton('Quitar', 'b-peligro b-chico', function () { d.remove(); estado.cambiosSinGuardar = true; }));
+  $('s-testimonios').appendChild(d);
+}
+$('btn-mas-articulo').onclick = function () { agregarFilaArticulo(); estado.cambiosSinGuardar = true; };
+$('btn-mas-testimonio').onclick = function () { agregarFilaTestimonio(); estado.cambiosSinGuardar = true; };
 function agregarFilaProyecto(p) {
   p = p || { nombre: '', texto: '', url: '' };
   var d = document.createElement('div'); d.className = 'proyecto-fila';
@@ -795,13 +877,19 @@ $('btn-guardar-perfil').onclick = function () {
   s.nombre = $('s-nombre').value.trim(); s.titulo = $('s-titulo').value.trim(); s.frase = $('s-frase').value.trim();
   s.sobreMi = $('s-sobre').value.trim(); s.temas = $('s-temas').value.split('\n').map(function (x) { return x.trim(); }).filter(Boolean);
   s.cifras = Array.prototype.map.call(document.querySelectorAll('.cifra-fila'), function (d) { return { valor: d.querySelector('[data-c=valor]').value.trim(), texto: d.querySelector('[data-c=texto]').value.trim() }; }).filter(function (x) { return x.valor; });
-  s.contacto = { texto: $('c-texto').value.trim(), correo: $('c-correo').value.trim(), whatsapp: $('c-whatsapp').value.replace(/\D/g, ''), instagram: $('c-instagram').value.trim() };
+  s.contacto = Object.assign({}, s.contacto || {}, { texto: $('c-texto').value.trim(), correo: $('c-correo').value.trim(), whatsapp: $('c-whatsapp').value.replace(/\D/g, ''), instagram: $('c-instagram').value.trim() });
   s.cargo = { texto: $('s-cargo').value.trim(), url: $('s-cargo-url').value.trim() };
   s.cvlac = $('s-cvlac').value.trim();
+  s.perfiles = {}; ['orcid', 'researchgate', 'scholar', 'linkedin'].forEach(function (k) { s.perfiles[k] = $('pf-' + k).value.trim(); });
+  if (pendientesPerfil.cvPdf !== undefined) s.cvPdf = pendientesPerfil.cvPdf;
+  s.articulos = Array.prototype.map.call(document.querySelectorAll('.articulo-fila'), function (d) { var o = {}; ['titulo', 'fuente', 'url', 'pdf'].forEach(function (k) { o[k] = d.querySelector('[data-a=' + k + ']').value.trim(); }); return o; }).filter(function (x) { return x.titulo; });
+  s.testimonios = Array.prototype.map.call(document.querySelectorAll('.testimonio-fila'), function (d) { var o = {}; ['texto', 'autor', 'cargo'].forEach(function (k) { o[k] = d.querySelector('[data-t=' + k + ']').value.trim(); }); return o; }).filter(function (x) { return x.texto; });
   s.investigacion = Array.prototype.map.call(document.querySelectorAll('.proyecto-fila'), function (d) { return { nombre: d.querySelector('[data-p=nombre]').value.trim(), texto: d.querySelector('[data-p=texto]').value.trim(), url: d.querySelector('[data-p=url]').value.trim() }; }).filter(function (x) { return x.nombre; });
   if (!s.nombre) { aviso('aviso-perfil', 'error', 'Escriba su nombre.'); return; }
   if (s.contacto.correo && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.contacto.correo)) { aviso('aviso-perfil', 'error', 'Revise el correo.'); return; }
-  var malUrl = s.investigacion.concat([{ url: s.contacto.instagram }, { url: s.cargo.url }, { url: s.cvlac }]).filter(function (p) { return p.url && !/^https?:\/\//.test(p.url); });
+  var malUrl = s.investigacion.concat([{ url: s.contacto.instagram }, { url: s.cargo.url }, { url: s.cvlac }],
+    Object.keys(s.perfiles).map(function (k) { return { url: s.perfiles[k] }; }),
+    s.articulos.map(function (a) { return { url: a.url }; }), s.articulos.map(function (a) { return { url: a.pdf }; })).filter(function (p) { return p.url && !/^https?:\/\//.test(p.url); });
   if (malUrl.length) { aviso('aviso-perfil', 'error', 'Las direcciones web deben empezar por https://'); return; }
   publicar(cand, 'Actualización de «Sobre mí» y contacto', 'aviso-perfil', pintarPerfil);
 };

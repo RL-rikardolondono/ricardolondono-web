@@ -41,12 +41,12 @@
   },
   {
    "nombre": "Autismo y Neurodesarrollo",
-   "texto": "Grupo creado en 2010.",
+   "texto": "Grupo creado en 2010. Línea: neurobiología del comportamiento.",
    "url": ""
   },
   {
    "nombre": "Grupo de Investigación en VIH y Enfermedades Infecciosas",
-   "texto": "Grupo creado en 2010 (COL0194131).",
+   "texto": "Grupo creado en 2010 (COL0194131). Líneas: VIH; genómica clínica aplicada al diagnóstico y tratamiento del VIH; análisis de resistencia viral asociada al VIH; criptococosis; infectología.",
    "url": ""
   },
   {
@@ -69,6 +69,35 @@
   "texto": "Universidades, colegios, congresos, centros de salud e instituciones pueden invitar al Dr. Ricardo Londoño González a dictar conferencias, seminarios y capacitaciones sobre estos temas:",
   "correo": "contacto@ricardolondono.com",
   "whatsapp": "",
-  "instagram": "https://www.instagram.com/autismocolombia/"
- }
+  "instagram": "https://www.instagram.com/autismocolombia/",
+  "formulario": "https://skynetgenesis.com/contacto-webs/enviar.php"
+ },
+ "perfiles": {
+  "orcid": "https://orcid.org/0000-0002-6153-2532",
+  "researchgate": "https://www.researchgate.net/profile/Ricardo-Londono-Gonzalez",
+  "scholar": "",
+  "linkedin": ""
+ },
+ "cvPdf": "/assets/cv/hoja-de-vida-ricardo-londono-gonzalez.pdf",
+ "articulos": [
+  {
+   "titulo": "Déficit de folato cerebral y autoinmunidad contra el receptor de folato alfa en el trastorno del espectro autista: biomarcadores, respuesta a leucovorina e implicaciones terapéuticas",
+   "fuente": "Revista Colombiana de Medicina, Vol. 1, Núm. 1 (2026), pp. 1-9. Artículo de revisión.",
+   "url": "https://revistacolombianademedicina.com/articulo/deficit-folato-cerebral-tea.html",
+   "pdf": "https://revistacolombianademedicina.com/articulos/deficit-folato-cerebral-tea.pdf"
+  },
+  {
+   "titulo": "Acetaminofén, metabolismo del folato y trastorno del espectro autista: de la evidencia epidemiológica a la plausibilidad terapéutica con ácido folínico",
+   "fuente": "Revista Colombiana de Medicina, Vol. 1, Núm. 1 (2026), pp. 10-27. Artículo de revisión.",
+   "url": "https://revistacolombianademedicina.com/articulo/acetaminofen-folato-tea.html",
+   "pdf": "https://revistacolombianademedicina.com/articulos/acetaminofen-folato-tea.pdf"
+  },
+  {
+   "titulo": "Multirresistencia bacteriana",
+   "fuente": "Revista Colombiana de Medicina, Vol. 1, Núm. 1 (2026), pp. 28-35. Artículo de revisión.",
+   "url": "https://revistacolombianademedicina.com/articulo/multirresistencia-bacteriana.html",
+   "pdf": "https://revistacolombianademedicina.com/articulos/multirresistencia-bacteriana.pdf"
+  }
+ ],
+ "testimonios": []
 }

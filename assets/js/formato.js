@@ -78,17 +78,57 @@
     return pubs.slice().sort(function (a, b) { return String(b.fecha).localeCompare(String(a.fecha)); });
   }
 
-  var VERSION = '2';
+  var VERSION = '3';
 
   // ---------- Armazón común de todas las páginas ----------
   var MENU = [
     ['inicio', '/', 'Inicio'],
     ['sobre', '/#sobre-mi', 'Sobre mí'],
     ['investigacion', '/#investigacion', 'Investigación'],
+    ['articulos', '/articulos/', 'Artículos'],
     ['publicaciones', '/publicaciones/', 'Publicaciones'],
     ['libros', '/libros/', 'Libros'],
+    ['galeria', '/galeria/', 'Galería'],
     ['conferencias', '/#conferencias', 'Conferencias']
   ];
+
+  // Perfiles académicos que se muestran como botones y se enlazan para Google (sameAs).
+  var PERFILES = [
+    ['cvlac', 'CvLAC (Minciencias)'],
+    ['orcid', 'ORCID'],
+    ['researchgate', 'ResearchGate'],
+    ['scholar', 'Google Scholar'],
+    ['linkedin', 'LinkedIn']
+  ];
+  function listaPerfiles(sitio) {
+    var p = sitio.perfiles || {}, out = [];
+    PERFILES.forEach(function (x) {
+      var url = x[0] === 'cvlac' ? (sitio.cvlac || p.cvlac) : p[x[0]];
+      if (url && /^https?:\/\//.test(url)) out.push({ clave: x[0], nombre: x[1], url: url });
+    });
+    return out;
+  }
+  function perfilesHtml(sitio, clase) {
+    var l = listaPerfiles(sitio);
+    var botones = l.map(function (x) {
+      return '<a class="perfil perfil--' + x.clave + '" href="' + esc(x.url) + '" target="_blank" rel="noopener me">' + esc(x.nombre) + '</a>';
+    });
+    if (sitio.cvPdf) botones.push('<a class="perfil perfil--cv" href="' + esc(sitio.cvPdf) + '" target="_blank" rel="noopener">⬇ Hoja de vida (PDF)</a>');
+    return botones.length ? '<div class="perfiles' + (clase ? ' ' + clase : '') + '">' + botones.join('') + '</div>' : '';
+  }
+
+  // Fotos de eventos (portada y fotos) para la galería.
+  function fotosEventos(pubs) {
+    var out = [];
+    ordenar(pubs).forEach(function (p) {
+      if (/libro/i.test(p.categoria || '')) return;
+      [p.portada].concat(p.fotos || []).forEach(function (f) {
+        if (f && out.every(function (x) { return x.src !== f; })) out.push({ src: f, titulo: p.titulo, slug: p.slug });
+      });
+    });
+    return out;
+  }
+  function esArticulo(p) { return /^art[ií]culo/i.test(p.categoria || ''); }
 
   function iniciales(nombre) {
     var p = String(nombre || 'RL').split(/\s+/);
@@ -115,6 +155,7 @@
     if (c.correo) redes.push('<li><a href="mailto:' + esc(c.correo) + '">' + esc(c.correo) + '</a></li>');
     if (c.whatsapp) redes.push('<li><a href="https://wa.me/57' + esc(String(c.whatsapp).replace(/\D/g, '').replace(/^57(?=\d{10}$)/, '')) + '" target="_blank" rel="noopener">WhatsApp</a></li>');
     if (c.instagram) redes.push('<li><a href="' + esc(c.instagram) + '" target="_blank" rel="noopener">Instagram</a></li>');
+    listaPerfiles(sitio).forEach(function (x) { redes.push('<li><a href="' + esc(x.url) + '" target="_blank" rel="noopener me">' + esc(x.nombre) + '</a></li>'); });
     return '<footer class="pie"><div class="contenedor"><div class="pie__in">' +
       '<div><h3>' + esc(sitio.nombre) + '</h3><p>' + esc(sitio.titulo) + '. ' + esc(sitio.frase || '') + '</p></div>' +
       '<div><h3>Secciones</h3><ul>' + MENU.slice(1).map(function (m) { return '<li><a href="' + m[1] + '">' + m[2] + '</a></li>'; }).join('') + '</ul></div>' +
@@ -154,7 +195,7 @@
   function tarjeta(p) {
     var fecha = etiquetaFecha(p);
     return '<a class="tarjeta" href="/' + esc(p.slug) + '/" data-categoria="' + esc(p.categoria || '') + '">' +
-      '<div class="tarjeta__img"><img src="' + esc(p.portada || '/assets/img/portada.jpg') + '" alt="" loading="lazy"></div>' +
+      '<div class="tarjeta__img"><img src="' + esc(p.portada || '/assets/img/portada.jpg') + '" alt="' + esc(p.titulo) + '" loading="lazy"></div>' +
       '<div class="tarjeta__cuerpo"><div class="tarjeta__meta"><span class="etiqueta">' + esc(p.categoria || 'Publicación') + '</span>' +
       (fecha ? '<span>' + esc(fecha) + '</span>' : '') + '</div>' +
       '<h3>' + esc(p.titulo) + '</h3>' +
@@ -168,11 +209,59 @@
       '<span class="libro__titulo">' + esc(l.titulo) + '</span><span class="libro__ver">Ver en la tienda →</span></a>';
   }
 
+  // Artículo científico publicado en una revista: {titulo, fuente, url, pdf}
+  function articuloHtml(a) {
+    var enlaces = (a.url ? '<a class="boton boton--accion boton--chico" href="' + esc(a.url) + '" target="_blank" rel="noopener">Leer artículo</a>' : '') +
+      (a.pdf ? '<a class="boton boton--borde boton--chico" href="' + esc(a.pdf) + '" target="_blank" rel="noopener">⬇ PDF</a>' : '');
+    return '<article class="art"><span class="etiqueta">Artículo científico</span><h3>' +
+      (a.url ? '<a href="' + esc(a.url) + '" target="_blank" rel="noopener">' + esc(a.titulo) + '</a>' : esc(a.titulo)) + '</h3>' +
+      (a.fuente ? '<p class="art__fuente">' + esc(a.fuente) + '</p>' : '') +
+      (enlaces ? '<div class="art__enlaces">' + enlaces + '</div>' : '') + '</article>';
+  }
+
+  function testimoniosHtml(sitio) {
+    var t = (sitio.testimonios || []).filter(function (x) { return x && x.texto; });
+    if (!t.length) return '';
+    return '<section class="seccion seccion--blanca"><div class="contenedor">' +
+      '<div class="seccion__cabeza"><div><span class="antetitulo">Testimonios</span><h2>Lo que dicen las instituciones</h2></div></div>' +
+      '<div class="testimonios">' + t.map(function (x) {
+        return '<figure class="testimonio"><blockquote>«' + esc(x.texto) + '»</blockquote><figcaption><b>' + esc(x.autor || '') + '</b>' +
+          (x.cargo ? '<span>' + esc(x.cargo) + '</span>' : '') + '</figcaption></figure>';
+      }).join('') + '</div></div></section>';
+  }
+
+  // Formulario para pedir una conferencia (lo envía /assets/js/sitio.js al servicio indicado en contacto.formulario).
+  function formularioConferencia(sitio) {
+    var c = sitio.contacto || {};
+    if (!c.formulario) return '';
+    var temas = (sitio.temas || []).map(function (t) { return '<option>' + esc(t) + '</option>'; }).join('');
+    return '<form class="form-conf" id="form-conferencia" data-destino="' + esc(c.formulario) + '" data-sitio="' + esc(c.sitioId || 'ricardolondono') + '" novalidate>' +
+      '<h3>Solicitar una conferencia</h3>' +
+      '<div class="form-conf__fila"><label>Nombre completo *<input name="nombre" required maxlength="120" autocomplete="name"></label>' +
+      '<label>Institución *<input name="institucion" required maxlength="160" autocomplete="organization"></label></div>' +
+      '<div class="form-conf__fila"><label>Correo *<input name="correo" type="email" required maxlength="160" autocomplete="email"></label>' +
+      '<label>Teléfono<input name="telefono" type="tel" maxlength="40" autocomplete="tel"></label></div>' +
+      '<div class="form-conf__fila"><label>Ciudad *<input name="ciudad" required maxlength="80"></label>' +
+      '<label>Fecha tentativa<input name="fecha" type="date"></label></div>' +
+      '<div class="form-conf__fila"><label>Tema<select name="tema"><option value="">Escoja un tema…</option>' + temas + '<option>Otro (lo explico en el mensaje)</option></select></label>' +
+      '<label>Modalidad<select name="modalidad"><option>Presencial</option><option>Virtual</option><option>Por definir</option></select></label></div>' +
+      '<div class="form-conf__fila"><label>Público<input name="publico" maxlength="120" placeholder="Ej.: docentes, médicos, padres"></label>' +
+      '<label>Asistentes (aprox.)<input name="asistentes" type="number" min="1" max="100000"></label></div>' +
+      '<label>Mensaje<textarea name="mensaje" maxlength="3000" rows="4"></textarea></label>' +
+      '<label class="form-conf__trampa" aria-hidden="true">Deje este campo vacío<input name="web" tabindex="-1" autocomplete="off"></label>' +
+      '<button class="boton boton--accion" type="submit">Enviar solicitud</button>' +
+      '<p class="form-conf__aviso" role="status" aria-live="polite"></p>' +
+      '<p class="form-conf__nota">Sus datos solo se usan para responder esta solicitud.' + (c.correo ? ' También puede escribir a <a href="mailto:' + esc(c.correo) + '">' + esc(c.correo) + '</a>.' : '') + '</p>' +
+      '</form>';
+  }
+
   // ---------- Páginas ----------
   function paginaInicio(sitio, pubs, libros, anio) {
     var c = sitio.contacto || {};
     var ultimas = ordenar(pubs).slice(0, 6);
     var dest = (libros.libros || []).filter(function (l) { return l.destacado; }).slice(0, 6);
+    var arts = (sitio.articulos || []).filter(function (a) { return a && a.titulo; });
+    var form = formularioConferencia(sitio);
     var cifras = (sitio.cifras || []).length ? '<div class="contenedor"><div class="cifras">' + sitio.cifras.map(function (x) {
       return '<div class="cifra"><b>' + esc(x.valor) + '</b><span>' + esc(x.texto) + '</span></div>';
     }).join('') + '</div></div>' : '';
@@ -199,8 +288,7 @@
       '<section class="seccion" id="sobre-mi"><div class="contenedor sobre">' +
       '<div class="sobre__foto"><img src="' + esc(sitio.foto) + '" alt="' + esc(sitio.nombre) + '" loading="lazy"></div>' +
       '<div class="sobre__texto"><span class="antetitulo">Sobre mí</span><h2>Medicina, investigación y docencia al servicio del neurodesarrollo</h2>' +
-      textoAHtml(sitio.sobreMi) +
-      (sitio.cvlac ? '<p><a class="boton boton--borde" href="' + esc(sitio.cvlac) + '" target="_blank" rel="noopener">Ver mi CvLAC (Minciencias)</a></p>' : '') +
+      textoAHtml(sitio.sobreMi) + perfilesHtml(sitio) +
       '</div></div></section>' +
 
       (grupos ? '<section class="seccion seccion--blanca" id="investigacion"><div class="contenedor">' +
@@ -208,25 +296,51 @@
       '<p>Grupos registrados en la plataforma ScienTI – GrupLAC del Ministerio de Ciencia, Tecnología e Innovación de Colombia.</p></div></div>' +
       '<div class="proyectos">' + grupos + '</div></div></section>' : '') +
 
-      '<section class="seccion"><div class="contenedor">' +
-      '<div class="seccion__cabeza"><div><span class="antetitulo">Publicaciones</span><h2>Conferencias, seminarios y lanzamientos</h2></div>' +
-      '<a class="boton boton--borde" href="/publicaciones/">Ver todas</a></div>' +
-      (ultimas.length ? '<div class="rejilla">' + ultimas.map(tarjeta).join('') + '</div>' : '<p class="vacio">Pronto habrá publicaciones.</p>') +
-      '</div></section>' +
+      seccionesIntermedias(sitio, pubs, libros, ultimas, dest, arts) +
 
-      '<section class="seccion seccion--blanca"><div class="contenedor">' +
-      '<div class="seccion__cabeza"><div><span class="antetitulo">Libros</span><h2>Obras destacadas</h2>' +
-      '<p>' + (libros.libros || []).length + ' títulos publicados en Autores Editores.</p></div>' +
-      '<a class="boton boton--borde" href="/libros/">Ver todos los libros</a></div>' +
-      '<div class="libros">' + dest.map(libroHtml).join('') + '</div></div></section>' +
-
-      '<section class="seccion" id="conferencias"><div class="contenedor"><div class="contacto">' +
+      '<section class="seccion" id="conferencias"><div class="contenedor"><div class="contacto' + (form ? ' contacto--form' : '') + '">' +
       '<div><span class="antetitulo antetitulo--claro">Conferencias</span><h2>Conferencias para su institución</h2><p>' + esc(c.texto) + '</p>' +
       ((sitio.temas || []).length ? '<ul class="temas temas--claro">' + sitio.temas.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '') +
-      '</div><div class="contacto__botones">' + botonesContacto.join('') + '</div></div></div></section>';
+      (form && botonesContacto.length ? '<div class="contacto__botones contacto__botones--fila">' + botonesContacto.join('') + '</div>' : '') +
+      '</div>' + (form || '<div class="contacto__botones">' + botonesContacto.join('') + '</div>') + '</div></div></section>';
 
+    var perfiles = listaPerfiles(sitio).map(function (x) { return x.url; });
+    if (c.instagram) perfiles.push(c.instagram);
+    var persona = { '@context': 'https://schema.org', '@type': 'Person', name: sitio.nombre, jobTitle: sitio.titulo, url: SITIO + '/', image: SITIO + sitio.foto,
+      email: (c.correo ? 'mailto:' + c.correo : undefined), sameAs: perfiles.length ? perfiles : undefined,
+      knowsAbout: (sitio.temas || []).length ? sitio.temas : undefined };
+    var orcid = ((sitio.perfiles || {}).orcid || '').match(/\d{4}-\d{4}-\d{4}-\d{3}[\dX]/);
+    if (orcid) persona.identifier = { '@type': 'PropertyValue', propertyID: 'ORCID', value: orcid[0] };
     return documento(sitio, { ruta: '/', activo: 'inicio', descripcion: sitio.frase, cuerpo: cuerpo, anio: anio,
-      extraHead: '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'Person', name: sitio.nombre, jobTitle: sitio.titulo, url: SITIO + '/', image: SITIO + sitio.foto, email: (c.correo ? 'mailto:' + c.correo : undefined) }) + '</script>\n' });
+      extraHead: '<script type="application/ld+json">' + JSON.stringify(persona).replace(/</g, '\\u003c') + '</script>\n' });
+  }
+
+  // Secciones entre «Investigación» y «Conferencias», alternando fondo blanco y gris.
+  function seccionesIntermedias(sitio, pubs, libros, ultimas, dest, arts) {
+    var bloques = [];
+    if (arts.length) bloques.push(['articulos', '<div class="seccion__cabeza"><div><span class="antetitulo">Artículos</span><h2>Artículos científicos recientes</h2>' +
+      '<p>Revisiones publicadas en acceso abierto.</p></div>' +
+      '<a class="boton boton--borde" href="/articulos/">Ver todos los artículos</a></div>' +
+      '<div class="arts">' + arts.slice(0, 3).map(articuloHtml).join('') + '</div>']);
+    bloques.push(['', '<div class="seccion__cabeza"><div><span class="antetitulo">Publicaciones</span><h2>Conferencias, seminarios y lanzamientos</h2></div>' +
+      '<a class="boton boton--borde" href="/publicaciones/">Ver todas</a></div>' +
+      (ultimas.length ? '<div class="rejilla">' + ultimas.map(tarjeta).join('') + '</div>' : '<p class="vacio">Pronto habrá publicaciones.</p>')]);
+    bloques.push(['', '<div class="seccion__cabeza"><div><span class="antetitulo">Libros</span><h2>Obras destacadas</h2>' +
+      '<p>' + (libros.libros || []).length + ' títulos publicados en Autores Editores.</p></div>' +
+      '<a class="boton boton--borde" href="/libros/">Ver todos los libros</a></div>' +
+      '<div class="libros">' + dest.map(libroHtml).join('') + '</div>']);
+    var fotos = fotosEventos(pubs).slice(0, 8);
+    if (fotos.length >= 4) bloques.push(['galeria', '<div class="seccion__cabeza"><div><span class="antetitulo">Galería</span><h2>Seminarios y congresos en imágenes</h2></div>' +
+      '<a class="boton boton--borde" href="/galeria/">Ver la galería</a></div>' +
+      '<div class="galeria galeria--inicio">' + fotos.map(function (f) {
+        return '<a class="galeria__foto" href="' + esc(f.src) + '"><img src="' + esc(f.src) + '" alt="' + esc(f.titulo) + '" loading="lazy"></a>';
+      }).join('') + '</div>']);
+    var t = testimoniosHtml(sitio);
+    if (t) bloques.push(['testimonios', t]);
+    return bloques.map(function (b, i) {
+      if (b[0] === 'testimonios') return b[1].replace('class="seccion seccion--blanca"', 'class="seccion' + (i % 2 ? ' seccion--blanca' : '') + '" id="testimonios"');
+      return '<section class="seccion' + (i % 2 ? ' seccion--blanca' : '') + '"' + (b[0] ? ' id="' + b[0] + '"' : '') + '><div class="contenedor">' + b[1] + '</div></section>';
+    }).join('');
   }
 
   function paginaPublicaciones(sitio, pubs, anio) {
@@ -269,7 +383,7 @@
     var fecha = etiquetaFecha(pub);
     var url = SITIO + '/' + pub.slug + '/';
     var cuerpo = '<article class="articulo">' +
-      '<nav class="miga" aria-label="Ruta"><a href="/">Inicio</a> › <a href="/publicaciones/">Publicaciones</a></nav>' +
+      '<nav class="miga" aria-label="Ruta"><a href="/">Inicio</a> › ' + (esArticulo(pub) ? '<a href="/articulos/">Artículos</a>' : '<a href="/publicaciones/">Publicaciones</a>') + '</nav>' +
       '<div class="articulo__meta"><span class="etiqueta">' + esc(pub.categoria || 'Publicación') + '</span>' + (fecha ? '<span>' + esc(fecha) + '</span>' : '') + '</div>' +
       '<h1>' + esc(pub.titulo) + '</h1>' +
       '<figure class="articulo__portada"><a class="galeria__foto-portada" href="' + esc(portada) + '"><img src="' + esc(portada) + '" alt="' + esc(pub.titulo) + '"></a></figure>' +
@@ -282,8 +396,41 @@
       '<a class="boton boton--borde" href="https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url) + '" target="_blank" rel="noopener">Facebook</a>' +
       '<a class="boton boton--borde" href="/publicaciones/">← Todas las publicaciones</a></div>' +
       '</article>';
-    return documento(sitio, { ruta: '/' + pub.slug + '/', activo: 'publicaciones', titulo: pub.titulo, tipo: 'article',
+    return documento(sitio, { ruta: '/' + pub.slug + '/', activo: esArticulo(pub) ? 'articulos' : 'publicaciones', titulo: pub.titulo, tipo: 'article',
       descripcion: textoPlano(pub.contenido, 160) || pub.titulo, imagen: portada, cuerpo: cuerpo, anio: anio });
+  }
+
+  function paginaArticulos(sitio, pubs, anio) {
+    var arts = (sitio.articulos || []).filter(function (a) { return a && a.titulo; });
+    var divul = ordenar(pubs).filter(esArticulo);
+    var cuerpo = '<section class="seccion"><div class="contenedor">' +
+      '<div class="seccion__cabeza"><div><span class="antetitulo">Artículos</span><h1>Artículos científicos y de divulgación</h1>' +
+      '<p>Revisiones científicas publicadas y textos de divulgación sobre autismo, TDAH, neurodesarrollo y otras áreas de la medicina.</p></div></div>' +
+      (arts.length ? '<h2 class="subtitulo">Artículos científicos</h2><div class="arts">' + arts.map(articuloHtml).join('') + '</div>' : '') +
+      '<h2 class="subtitulo">Divulgación</h2>' +
+      (divul.length ? '<div class="rejilla">' + divul.map(tarjeta).join('') + '</div>' : '<p class="vacio">Muy pronto publicaremos aquí artículos de divulgación.</p>') +
+      perfilesHtml(sitio, 'perfiles--centro') +
+      '</div></section>';
+    return documento(sitio, { ruta: '/articulos/', activo: 'articulos', titulo: 'Artículos', descripcion: 'Artículos científicos y de divulgación de ' + sitio.nombre + ' sobre autismo, TDAH y neurodesarrollo.', cuerpo: cuerpo, anio: anio });
+  }
+
+  function paginaGaleria(sitio, pubs, anio) {
+    var grupos = [];
+    fotosEventos(pubs).forEach(function (f) {
+      var g = grupos.filter(function (x) { return x.slug === f.slug; })[0];
+      if (!g) { g = { slug: f.slug, titulo: f.titulo, fotos: [] }; grupos.push(g); }
+      g.fotos.push(f);
+    });
+    var cuerpo = '<section class="seccion"><div class="contenedor">' +
+      '<div class="seccion__cabeza"><div><span class="antetitulo">Galería</span><h1>Seminarios y congresos en imágenes</h1>' +
+      '<p>Fotos de conferencias, seminarios y talleres en distintas ciudades del país. Pulse una foto para verla en grande.</p></div></div>' +
+      (grupos.length ? grupos.map(function (g) {
+        return '<section class="grupo-fotos"><h2><a href="/' + esc(g.slug) + '/">' + esc(g.titulo) + '</a></h2><div class="galeria">' +
+          g.fotos.map(function (f, i) { return '<a class="galeria__foto" href="' + esc(f.src) + '"><img src="' + esc(f.src) + '" alt="' + esc(f.titulo) + (g.fotos.length > 1 ? ' — foto ' + (i + 1) : '') + '" loading="lazy"></a>'; }).join('') +
+          '</div></section>';
+      }).join('') : '<p class="vacio">Pronto habrá fotos.</p>') +
+      '</div></section>';
+    return documento(sitio, { ruta: '/galeria/', activo: 'galeria', titulo: 'Galería', descripcion: 'Fotos de conferencias, seminarios y congresos de ' + sitio.nombre + '.', cuerpo: cuerpo, anio: anio });
   }
 
   function pagina404(sitio, anio) {
@@ -317,6 +464,8 @@
     out['index.html'] = paginaInicio(sitio, pubs, libros, anio);
     out['publicaciones/index.html'] = paginaPublicaciones(sitio, pubs, anio);
     out['libros/index.html'] = paginaLibros(sitio, libros, anio);
+    out['articulos/index.html'] = paginaArticulos(sitio, pubs, anio);
+    out['galeria/index.html'] = paginaGaleria(sitio, pubs, anio);
     out['404.html'] = pagina404(sitio, anio);
     out['skynet-politica-de-privacidad/index.html'] = paginaPrivacidad(sitio, anio);
     pubs.forEach(function (p) { out[p.slug + '/index.html'] = paginaPublicacion(sitio, p, anio); });
@@ -325,7 +474,7 @@
   }
 
   function mapaDelSitio(pubs) {
-    var urls = ['/', '/publicaciones/', '/libros/', '/skynet-politica-de-privacidad/'];
+    var urls = ['/', '/articulos/', '/publicaciones/', '/libros/', '/galeria/', '/skynet-politica-de-privacidad/'];
     pubs.forEach(function (p) { urls.push('/' + p.slug + '/'); });
     return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
       urls.map(function (u) { return '  <url><loc>' + SITIO + u + '</loc></url>'; }).join('\n') + '\n</urlset>\n';
@@ -335,7 +484,7 @@
     esc: esc, textoAHtml: textoAHtml, textoPlano: textoPlano, fechaLarga: fechaLarga,
     etiquetaFecha: etiquetaFecha, slugify: slugify, idYoutube: idYoutube, ordenar: ordenar,
     paginaPublicacion: paginaPublicacion, paginaInicio: paginaInicio, paginaPublicaciones: paginaPublicaciones,
-    paginaLibros: paginaLibros, pagina404: pagina404, paginaPrivacidad: paginaPrivacidad,
+    paginaLibros: paginaLibros, paginaArticulos: paginaArticulos, paginaGaleria: paginaGaleria, listaPerfiles: listaPerfiles, pagina404: pagina404, paginaPrivacidad: paginaPrivacidad,
     generarTodo: generarTodo, mapaDelSitio: mapaDelSitio, SITIO: SITIO, VERSION: VERSION
   };
 });
