@@ -288,7 +288,8 @@
    "categoria": "Traducciones: Clásicos de la Fe",
    "url": "https://www.autoreseditores.com/libro/36239/andrew-murray/esperando-en-dios.html",
    "portada": "/assets/img/libros/36239.jpg",
-   "destacado": false
+   "destacado": false,
+   "amazon": "https://www.amazon.com/dp/B0HQMJWN6G"
   },
   {
    "id": "36155",
@@ -296,6 +297,16 @@
    "categoria": "Traducciones: Clásicos de la Fe",
    "url": "https://www.autoreseditores.com/libro/36155/e-m-bounds/o-poder-da-oracao.html",
    "portada": "/assets/img/libros/36155.jpg",
+   "destacado": false,
+   "amazon": "https://www.amazon.com/dp/B0HQMQ2N5M"
+  },
+  {
+   "id": "kdp-B0HRRGK933",
+   "titulo": "Esperando em Deus (Andrew Murray) — tradução, introdução e notas",
+   "categoria": "Traducciones: Clásicos de la Fe",
+   "url": "",
+   "amazon": "https://www.amazon.com/dp/B0HRRGK933",
+   "portada": "/assets/img/libros/esperando-em-deus.jpg",
    "destacado": false
   }
  ],
